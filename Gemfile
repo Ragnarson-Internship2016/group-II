@@ -8,6 +8,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
+gem 'rails-assets-bootstrap', source: 'https://rails-assets.org'
 
 group :development, :test do
   gem 'byebug', platform: :mri
