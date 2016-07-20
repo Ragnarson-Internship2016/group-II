@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="700px" height="440px" viewBox="0 0 700 440" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>Browser Window</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="700" height="440" rx="7"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Landing" transform="translate(-370.000000, -170.000000)">
+            <g id="Browser-Window" transform="translate(370.000000, 170.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#FCFCFC" xlink:href="#path-1"></use>
+                <rect id="Window-Bar" fill="#DFE6EC" mask="url(#mask-2)" x="0" y="0" width="700" height="30"></rect>
+                <circle id="Oval-1" fill="#FF564F" mask="url(#mask-2)" cx="19" cy="15" r="7"></circle>
+                <circle id="Oval-1-Copy" fill="#FFB429" mask="url(#mask-2)" cx="43" cy="15" r="7"></circle>
+                <circle id="Oval-1-Copy-2" fill="#25C63A" mask="url(#mask-2)" cx="67" cy="15" r="7"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

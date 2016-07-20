@@ -12,11 +12,14 @@ gem 'devise'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-hocus-pocus'
+  gem 'rails-assets-font-awesome'
 end
 
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.4'
+  gem 'rails-controller-testing'
+  gem 'capybara'
   gem 'factory_girl_rails', '~> 4.7'
   gem 'faker', '~> 1.6.5'
 end
