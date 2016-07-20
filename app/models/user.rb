@@ -7,4 +7,6 @@ class User < ApplicationRecord
   validates :name, :surname, presence: true
 
   has_many :managed_projects, class_name: "Project"
+  has_many :user_projects
+  has_many :contributed_projects, :through => :user_projects, source: :project
 end

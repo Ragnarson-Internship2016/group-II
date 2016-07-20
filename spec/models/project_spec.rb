@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
-  let(:user) { User.build(name: "Wojtek", surname: "Pospiech", email: "a@a.pl", password: "topsecret") }
-
   context "with invalid params" do
     it "is not valid without title" do
       project = FactoryGirl.build(:project, title: nil)

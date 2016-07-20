@@ -32,4 +32,19 @@ RSpec.describe User, type: :model do
       expect(user.managed_projects.to_a).to eql(projects)
     end
   end
+
+  context "Properly setup association - user has many contributed projects" do
+    it "returns an empty array of projects when user does no contribute to any project" do
+      expect(user.contributed_projects).to be_empty
+    end
+
+    it "returns array of projects that user contribute to" do
+      projects = []
+      5.times do
+        projects << user.managed_projects.create(title: "shop application", description: "exercise", date: "1/12/2016")
+        UserProject.create(user: user, project: projects.last)
+      end
+      expect(user.contributed_projects.to_a).to eql(projects)
+    end
+  end
 end
