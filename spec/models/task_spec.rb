@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  subject(:task) { Task.create(title: "Short text", description: "Long text", due_date: "11-11-1999") }
+  subject(:task) { Task.create(title: "Short text", description: "Long text", due_date: Date.today + 1.day ) }
   
   context "With a proper task validations" do
     it "it is valid with all params provided" do
@@ -22,6 +22,11 @@ RSpec.describe Task, type: :model do
 
     it "is not valid without a due_date" do
       task.due_date = nil
+      expect(task).not_to be_valid
+    end
+
+    it "is not valid with a past_date" do
+      task.due_date = Date.today - 1.day
       expect(task).not_to be_valid
     end
   end
