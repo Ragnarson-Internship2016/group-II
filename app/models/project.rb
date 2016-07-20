@@ -1,3 +1,3 @@
 class Project < ApplicationRecord
-  validates :title, :date, :description, presence: { message: "must be given please" }
+  validates :title, :date, :description, presence: true
 end
