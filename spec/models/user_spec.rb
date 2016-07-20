@@ -2,16 +2,17 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   context "With a proper validations setup user" do
-    before :each do
-      @user = User.create(name: "Wojtek", surname: "Pośpiech")
-    end
+    let(:user) { User.create(name: "Wojtek", surname: "Pośpiech", email: "a@a.pl", password: "topsecret") }
     it "should not be valid without a name" do
-      @user.name = nil
-      @user.should_not be_valid
+      user.name = nil
+      expect(user).not_to be_valid
     end
     it "should not be valid without a surname" do
-      @user.surname = nil
-      @user.should_not be_valid
+      user.surname = nil
+      expect(user).not_to be_valid
+    end
+    it "should be valid with all params provided" do
+      expect(user).to be_valid
     end
   end
 end
