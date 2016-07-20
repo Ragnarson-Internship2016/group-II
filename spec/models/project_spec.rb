@@ -8,7 +8,8 @@ RSpec.describe Project, type: :model do
     end
 
     it "does not save project with too long title" do
-      project = Project.new(title: "projekt o bardzo długim, długim, długim, długim, długim, długim, długim, długim za długim tytule o kilka znaków", date: "20-07-2016", description: "o niczym")
+      title = "title" * 21
+      project = Project.new(title: title, date: "20-07-2016", description: "o niczym")
       expect(project.save).to eq(false)
     end
   end
