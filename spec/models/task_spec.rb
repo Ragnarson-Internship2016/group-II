@@ -1,15 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  subject(:task) { Task.create(title: "Short text", description: "Long text", due_date: Date.today + 1.day ) }
+  subject(:task) do
+    Task.new(title: "Short text", 
+             description: "Long text", 
+             due_date: Date.today + 1.day )
+  end
   
-  context "With a proper task validations" do
-    it "it is valid with all params provided" do
+  context "with valid task params" do
+    it "it is valid with all task params" do
       expect(task).to be_valid
-    end    
+    end
   end
 
-  context "With improper task validations" do
+  context "with invalid task params" do
     it "is not valid without a title" do
       task.title = nil
       expect(task).not_to be_valid
