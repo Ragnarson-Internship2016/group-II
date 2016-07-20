@@ -5,4 +5,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   validates :name, :surname, presence: true
+
+  has_many :managed_projects, class_name: "Project"
 end
