@@ -6,6 +6,7 @@ RSpec.describe Project, type: :model do
       project = Project.new(id:1, date: "20-07-2016", description: "o niczym")
       expect(project.save).to eq(false)
     end
+
     it "does not save project with too long title" do
       project = Project.new(id:2, title: "projekt o bardzo długim, długim, długim, długim, długim, długim, długim, długim za długim tytule o kilka znaków", date: "20-07-2016", description: "o niczym")
       expect(project.save).to eq(false)
