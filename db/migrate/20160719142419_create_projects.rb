@@ -6,6 +6,7 @@ class CreateProjects < ActiveRecord::Migration[5.0]
       t.date :date
       t.string :description
       t.integer :manager_id
+
       t.timestamps
     end
   end
