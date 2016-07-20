@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe User, type: :model do
-  subject(:user) { User.create(name: "Wojtek", surname: "Pośpiech", email: "a@a.pl", password: "topsecret") }
+  subject(:user) { FactoryGirl.build(:user) }
 
   context "With a proper validations setup user" do
     it "is valid with all params provided" do
