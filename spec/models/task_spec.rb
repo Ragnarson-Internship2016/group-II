@@ -6,14 +6,14 @@ RSpec.describe Task, type: :model do
   let(:due_date) { "11-11-1999" } 
   let(:done) { true }
 
-  context "valid params" do
+  context "when valid params" do
     it "save task with all params" do
       task = Task.new(title: title, description: description, due_date: due_date, done: true)
       expect(task.save).to eq(true)
     end
   end
 
-  context "invalid params" do
+  context "when invalid params" do
     it "does not save task without title" do
       task = Task.new(title: nil, description: description, due_date: due_date, done: true)
       expect(task.save).to eq(false)

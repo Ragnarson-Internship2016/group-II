@@ -38,9 +38,9 @@ ActiveRecord::Schema.define(version: 20160720100703) do
     t.string   "title"
     t.text     "description"
     t.date     "due_date"
-    t.boolean  "done"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.boolean  "done",        default: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "users", force: :cascade do |t|
