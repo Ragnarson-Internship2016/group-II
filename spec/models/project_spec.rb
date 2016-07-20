@@ -6,12 +6,6 @@ RSpec.describe Project, type: :model do
       project = Project.new(date: "20-07-2016", description: "about nothing")
       expect(project.save).to eq(false)
     end
-
-    it "does not save project with too long title" do
-      title = "nothing" * 21
-      project = Project.new(title: title, date: "20-07-2016", description: "about nothing")
-      expect(project.save).to eq(false)
-    end
   end
 
   context "valid params" do
