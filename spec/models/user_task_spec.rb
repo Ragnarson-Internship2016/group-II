@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UserTask, type: :model do
   subject(:employee) { FactoryGirl.create(:user) }
-  let(:task) { Task.create(title: "Write report", description: "Summary of last meeting", due_date: Date.today + 7.day) }
+  let(:task) { FactoryGirl.create(:task) }
 
   context "with valid parameters" do
     it "assigns employee to the task" do
