@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="grid grid-pair">
+      <div class="grid-item 2/4 mobile-3/4 navbar-left">
+        <%= link_to "Bulbulator", root_path, class: "navbar-link" %>
+      </div>
+
+      <label for="navbar-checkbox" class="grid-item mobile-1/4 btn navbar-btn hidden mobile-visible">
+        <i class="fa fa-bars"></i>
+      </label>
+      <input type="checkbox" id="navbar-checkbox" class="hidden">
+
+      <div class="grid-item 2/4 mobile-1/1 navbar-right">
+        <ul class="navbar-menu">
+          <% if user_signed_in? %>
+            <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+            <li><%= link_to "Add task", root_path, class: "btn" %></li>
+          <% else %>
+            <li><%= link_to "Sign in", new_user_session_path %></li>
+            <li><%= link_to "Join for free", new_user_registration_path, class: "btn" %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

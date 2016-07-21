@@ -1,0 +1,59 @@
+.navbar {
+  .navbar-left {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+
+    .navbar-link {
+      @include font-size-heading(1, $font-size-h3);
+
+      float: left;
+      margin: 0;
+
+      font-weight: bold;
+    }
+  }
+
+  .navbar-btn {
+    @include font-size-heading(1, $font-size-h3);
+    @include ui-padding;
+
+    float: right;
+    margin: 0;
+    background: none;
+
+    font-size: 1.2rem;
+  }
+
+  .navbar-right {
+    text-align: right;
+
+    .navbar-menu > li > a {
+      @include font-size($font-size-small);
+
+      padding: ($ui-padding-vertical * 2) ($ui-padding-horizontal * 2);
+
+      letter-spacing: 0.03rem;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+  }
+}
+
+@include rwd("mobile") {
+  .navbar {
+    .navbar-menu {
+      display: none;
+
+      li {
+        @include ui-padding;
+
+        display: block;
+        text-align: left;
+      }
+    }
+
+    #navbar-checkbox:checked ~ .grid-item .navbar-menu {
+      display: block;
+    }
+  }
+}

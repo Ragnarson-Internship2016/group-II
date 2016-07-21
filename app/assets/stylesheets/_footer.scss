@@ -1,0 +1,20 @@
+.main-footer {
+  @include font-size($font-size-small);
+
+  color: $footer-text-color;
+  background: $secondary-color;
+
+  line-height: calc(60px - ($spacing-unit * 2));
+  text-transform: uppercase;
+  font-weight: bold;
+
+  p {
+    margin: 0;
+    padding-left: halve($grid-gutter);
+  }
+
+  a {
+    color: $footer-text-color;
+    text-decoration: none;
+  }
+}

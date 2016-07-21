@@ -1,0 +1,11 @@
+.box {
+  margin-top: double(-$spacing-unit);
+  margin-bottom: double($spacing-unit);
+
+  border-radius: $ui-border-radius;
+
+  &.box-informative {
+    color: #FFFFFF;
+    background: $color-informative;
+  }
+}

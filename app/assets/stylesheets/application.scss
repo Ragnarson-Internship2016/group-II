@@ -1,1 +1,17 @@
+@import "colors";
+@import "variables";
+
 @import "hocus-pocus";
+
+@import "_font-awesome";
+@import "navigation";
+@import "buttons";
+@import "footer";
+@import "box";
+@import "landing";
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,900);
+
+body {
+  font-family: "Lato", sans-serif;
+}
