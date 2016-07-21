@@ -31,7 +31,9 @@ RSpec.describe Task, type: :model do
 
     it "is not valid with a past_date" do
       task.due_date = Date.today - 1.day
-      expect(task).not_to be_valid
+      task.validate
+      expect(task.errors.messages[:due_date].first).
+      to include("Date should not be in the past.")
     end
   end
 end
