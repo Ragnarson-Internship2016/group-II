@@ -16,6 +16,7 @@ source 'https://rails-assets.org' do
 end
 
 group :development, :test do
+  gem 'database_cleaner'
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.4'
   gem 'rails-controller-testing'
