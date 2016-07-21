@@ -36,7 +36,7 @@ RSpec.describe Task, type: :model do
   end
 
   context "with properly setup many to many association user-task" do
-    it "returns empty participants list if noone is aggined" do
+    it "returns empty list of participants if nobody is assigned" do
       expect(task.participants).to be_empty
     end
 

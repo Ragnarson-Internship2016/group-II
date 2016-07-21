@@ -10,9 +10,9 @@ RSpec.describe UserTask, type: :model do
     end
 
     it "does not assigned the same person to the same task twice" do
-      expect{
+      expect {
         2.times { UserTask.create(user: employee, task: task) }
-        }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.to raise_error(ActiveRecord::RecordNotUnique)
     end
   end
 
