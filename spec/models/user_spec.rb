@@ -3,13 +3,13 @@ require "rails_helper"
 RSpec.describe User, type: :model do
   subject(:user) { FactoryGirl.create(:user) }
 
-  context "With a proper validations setup user" do
+  context "with a proper validations setup user" do
     it "is valid with all params provided" do
       expect(user).to be_valid
     end
   end
 
-  context "With improper validations setup user" do
+  context "with improper validations setup user" do
     it "is not valid without a name" do
       user.name = nil
       expect(user).not_to be_valid
@@ -21,7 +21,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context "Properly setup association - user has many managed projects" do
+  context "with properly setup association - user has many managed projects" do
     it "returns an empty array of projects when no project has been created by the user" do
       expect(user.managed_projects).to be_empty
     end
@@ -33,7 +33,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context "Properly setup association - user has many contributed projects" do
+  context "with properly setup association - user has many contributed projects" do
     it "returns an empty array of projects when user does no contribute to any project" do
       expect(user.contributed_projects).to be_empty
     end
