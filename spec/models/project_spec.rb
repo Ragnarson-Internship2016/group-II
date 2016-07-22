@@ -73,4 +73,25 @@ RSpec.describe Project, type: :model do
       expect(project.contributors.to_a).to eql(contributors)
     end
   end
+
+  context "when associated events exist" do
+    context "when created with single project factory" do
+      subject { FactoryGirl.build(:project_with_events) }
+
+      it "contains associated events count" do
+        expect(subject.events.size).to eql(3)
+      end
+    end
+
+    context "when events added to existing project" do
+      subject { FactoryGirl.build(:project) }
+
+      it "contains associated events" do
+        events = 3.times.collect do
+          FactoryGirl.create(:event, project: subject)
+        end
+        expect(subject.events.to_a).to eql(events)
+      end
+    end
+  end
 end

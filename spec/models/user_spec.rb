@@ -61,4 +61,19 @@ RSpec.describe User, type: :model do
       expect(user.assigned_tasks.to_a).to eql([first_task, second_task])
     end
   end
+
+  context "when associated events exist" do
+    subject { FactoryGirl.build(:user) }
+    let!(:events) do
+      3.times.collect { FactoryGirl.create(:event, author: subject) }
+    end
+
+    it "contains associated events count" do
+      expect(subject.events.size).to eql(3)
+    end
+
+    it "contains associated events" do
+      expect(subject.events.to_a).to eql(events)
+    end
+  end
 end
