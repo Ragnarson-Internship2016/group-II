@@ -5,7 +5,7 @@ class Project < ApplicationRecord
   has_many :user_projects
   has_many :contributors, through: :user_projects, source: :user
 
-  has_many :events
+  has_many :events, dependent: :destroy
 
   has_many :tasks, dependent: :destroy
 end

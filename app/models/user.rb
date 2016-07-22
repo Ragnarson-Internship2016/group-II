@@ -13,5 +13,14 @@ class User < ApplicationRecord
   has_many :user_tasks
   has_many :assigned_tasks, through: :user_tasks, source: :task
 
-  has_many :events, foreign_key: "author_id"
+  has_many :events, foreign_key: "author_id", dependent: :destroy
+
+  def takes_part_in_project?(project_id)
+    if self.managed_projects.any? { |project| project.id == project_id }
+      return true
+    elsif self.contributed_projects.any? { |project| project.id == project_id }
+      return true
+    end
+    false
+  end
 end

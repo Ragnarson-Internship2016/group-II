@@ -1,0 +1,8 @@
+<h1>New Event</h1>
+
+<%= render 'form',
+  project: @event.project,
+  event: @event,
+  url: project_events_path(@event.project) %>
+
+<%= link_to 'Back', project_events_path(@event.project) %>
