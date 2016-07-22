@@ -34,6 +34,7 @@ RSpec.describe Task, type: :model do
 
     it "raises error with try to save task without project" do
       task = FactoryGirl.build(:task)
+      task.project = nil
       expect { task.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
