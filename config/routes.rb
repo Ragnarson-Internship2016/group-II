@@ -5,8 +5,7 @@ Rails.application.routes.draw do
 
   resources :projects do
     resources :tasks
-
-      post "/tasks/:id/assign" => "user_tasks#assign"
-      delete "/tasks/:id/leave" => "user_tasks#leave"
+    post "/tasks/:id/assign" => "user_tasks#assign"
+    delete "/tasks/:id/leave" => "user_tasks#leave"
   end
 end

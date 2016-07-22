@@ -20,7 +20,7 @@ RSpec.describe UserTasksController, type: :controller do
         end
 
         it "returns flash success message" do |variable|
-          expect(flash[:notice]).to include("Successfully assigned!")
+          expect(flash[:notice]).to include("Task successfully assigned.")
         end
       end
 
@@ -37,7 +37,7 @@ RSpec.describe UserTasksController, type: :controller do
 
         it "returns flash successfully removed from task assignment" do
           delete :leave, params: { project_id: task.project.id, id: task.id }
-          expect(flash[:notice]).to include("You are no logner assigned to this task!")
+          expect(flash[:notice]).to include("Task assigment was removed.")
         end
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe UserTasksController, type: :controller do
 
       it "returns parameters' error in flash message" do
         delete :leave, params: { project_id: task.project.id, id: "foo"}
-        expect(flash[:notice]).to include( "Error, wrong parameters in the request!")
+        expect(flash[:notice]).to include("Unable to find requested task.")
       end
     end
 
@@ -60,23 +60,9 @@ RSpec.describe UserTasksController, type: :controller do
   end
 
   context "when user is not logged" do
-    context "#assign" do
-      it "returns error in flash message" do
-        post :assign, params: { project_id: task.project.id, id: task.id }
-        expect(flash[:notice]).to include("Error, cannot assigned!")
-      end
-
-      it "redirects to task show" do
-        post :assign, params: { project_id: task.project.id, id: task.id }
-        expect(response).to redirect_to([task.project, task])
-      end
-    end
-
-    context "#leave" do
-      it "returns error in flash message" do
-        delete :leave, params: { project_id: task.project.id, id: task.id }
-        expect(flash[:notice]).to include("Error, cannot remove assignment!")
-      end
+    it "redirects to sign in" do
+      post :assign, params: { project_id: task.project.id, id: task.id }
+      expect(response).to redirect_to(new_user_session_path)
     end
   end
 
