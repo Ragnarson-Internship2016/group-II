@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   subject(:user) { FactoryGirl.create(:user) }
-  subject(:task1) { FactoryGirl.create(:task) }
-  subject(:task2) { FactoryGirl.create(:task) }
+  let(:first_task) { FactoryGirl.create(:task) }
+  let(:second_task) { FactoryGirl.create(:task) }
 
   context "with a proper validations setup user" do
     it "is valid with all params provided" do
@@ -56,9 +56,9 @@ RSpec.describe User, type: :model do
     end
 
     it "returns list of assigned tasks if specified" do
-      UserTask.create(user: user, task: task1)
-      UserTask.create(user: user, task: task2)
-      expect(user.assigned_tasks.to_a).to eql([task1, task2])
+      UserTask.create(user: user, task: first_task)
+      UserTask.create(user: user, task: second_task)
+      expect(user.assigned_tasks.to_a).to eql([first_task, second_task])
     end
   end
 end

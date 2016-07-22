@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  subject(:employee1) { FactoryGirl.create(:user) }
-  subject(:employee2) { FactoryGirl.create(:user) }
   subject(:task) { FactoryGirl.create(:task) }
+  let(:employee_mark) { FactoryGirl.create(:user) }
+  let(:employee_tom) { FactoryGirl.create(:user) }
 
   context "with valid task params" do
     it "it is valid with all task params" do
@@ -41,9 +41,9 @@ RSpec.describe Task, type: :model do
     end
 
     it "returns array of prticipants" do
-      UserTask.create(user: employee1, task: task)
-      UserTask.create(user: employee2, task: task)
-      expect(task.participants.to_a).to eql([employee1, employee2])
+      UserTask.create(user: employee_mark, task: task)
+      UserTask.create(user: employee_tom, task: task)
+      expect(task.participants.to_a).to eql([employee_mark, employee_tom])
     end
   end
 end

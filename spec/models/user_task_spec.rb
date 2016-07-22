@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UserTask, type: :model do
-  subject(:employee) { FactoryGirl.create(:user) }
+  let(:employee) { FactoryGirl.create(:user) }
   let(:task) { FactoryGirl.create(:task) }
 
   context "with valid parameters" do
