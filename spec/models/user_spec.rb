@@ -2,8 +2,9 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   subject(:user) { FactoryGirl.create(:user) }
-  let(:first_task) { FactoryGirl.create(:task) }
-  let(:second_task) { FactoryGirl.create(:task) }
+  let(:project) { FactoryGirl.create(:project) }
+  let(:first_task) { FactoryGirl.create(:task, project: project) }
+  let(:second_task) { FactoryGirl.create(:task, project: project) }
 
   context "with a proper validations setup user" do
     it "is valid with all params provided" do

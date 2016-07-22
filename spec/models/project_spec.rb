@@ -94,4 +94,16 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  context "with poperly setup association - project has_many tasks" do
+    it "has 3 tasks" do
+      project = FactoryGirl.create(:project_with_tasks)
+      expect(project.tasks.length).to eql(3)
+    end
+
+    it "destroys tasks when the project is removed" do
+      project = FactoryGirl.create(:project_with_tasks)
+      expect { project.destroy }.to change { project.tasks.count }.by(-3)
+    end
+  end
 end

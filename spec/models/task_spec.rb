@@ -1,13 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  subject(:task) { FactoryGirl.create(:task) }
+  subject(:task) { FactoryGirl.create(:task, project: project) }
+  let(:project) { FactoryGirl.create(:project) }
   let(:employee_mark) { FactoryGirl.create(:user) }
   let(:employee_tom) { FactoryGirl.create(:user) }
 
   context "with valid task params" do
     it "it is valid with all task params" do
       expect(task).to be_valid
+    end
+
+    it "contains reference to correct project" do
+      expect(task.project.id).to eql(task.project_id)
     end
   end
 
@@ -25,6 +30,11 @@ RSpec.describe Task, type: :model do
     it "is not valid without a due_date" do
       task.due_date = nil
       expect(task).not_to be_valid
+    end
+
+    it "raises error with try to save task without project" do
+      task = FactoryGirl.build(:task)
+      expect { task.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "is not valid with a past_date" do
