@@ -18,5 +18,15 @@ FactoryGirl.define do
         create_list(:event, evaluator.events_count, project: project)
       end
     end
+
+    factory :project_with_tasks do
+      transient do
+        tasks_count 3
+      end
+
+      after(:create) do |project, evaluator|
+        create_list(:task, evaluator.tasks_count, project: project)
+      end
+    end
   end
 end

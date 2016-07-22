@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe UserTask, type: :model do
   let(:employee) { FactoryGirl.create(:user) }
-  let(:task) { FactoryGirl.create(:task) }
+  let(:project) { FactoryGirl.create(:project) }
+  let(:task) { FactoryGirl.create(:task, project: project) }
 
   context "with valid parameters" do
     it "assigns employee to the task" do

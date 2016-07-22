@@ -5,6 +5,8 @@ class Task < ApplicationRecord
   has_many :user_tasks
   has_many :participants, through: :user_tasks, source: :user
 
+  belongs_to :project
+
   private
   def validate_due_date_not_in_past
     if due_date && due_date < Date.today
