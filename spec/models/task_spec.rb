@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Task, type: :model do
-  subject(:task) do
-    Task.new(title: "Short text", 
-             description: "Long text", 
-             due_date: Date.today + 1.day )
-  end
-  
+  subject(:task) { FactoryGirl.create(:task) }
+  let(:employee_mark) { FactoryGirl.create(:user) }
+  let(:employee_tom) { FactoryGirl.create(:user) }
+
   context "with valid task params" do
     it "it is valid with all task params" do
       expect(task).to be_valid
@@ -34,6 +32,18 @@ RSpec.describe Task, type: :model do
       task.validate
       expect(task.errors.messages[:due_date].first).
       to include("Date should not be in the past.")
+    end
+  end
+
+  context "with properly setup many to many association user-task" do
+    it "returns empty list of participants if nobody is assigned" do
+      expect(task.participants).to be_empty
+    end
+
+    it "returns array of prticipants" do
+      UserTask.create(user: employee_mark, task: task)
+      UserTask.create(user: employee_tom, task: task)
+      expect(task.participants.to_a).to eql([employee_mark, employee_tom])
     end
   end
 end

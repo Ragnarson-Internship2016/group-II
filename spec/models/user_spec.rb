@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   subject(:user) { FactoryGirl.create(:user) }
+  let(:first_task) { FactoryGirl.create(:task) }
+  let(:second_task) { FactoryGirl.create(:task) }
 
   context "with a proper validations setup user" do
     it "is valid with all params provided" do
@@ -45,6 +47,18 @@ RSpec.describe User, type: :model do
         UserProject.create(user: user, project: projects.last)
       end
       expect(user.contributed_projects.to_a).to eql(projects)
+    end
+  end
+
+  context "with properly setup association many to many user-task" do
+    it "returns empty list of assigned tasks if not assigend" do
+      expect(user.assigned_tasks).to be_empty
+    end
+
+    it "returns list of assigned tasks if specified" do
+      UserTask.create(user: user, task: first_task)
+      UserTask.create(user: user, task: second_task)
+      expect(user.assigned_tasks.to_a).to eql([first_task, second_task])
     end
   end
 end
