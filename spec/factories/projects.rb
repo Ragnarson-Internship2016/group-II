@@ -8,5 +8,15 @@ FactoryGirl.define do
     factory :project_with_contributors do
       contributors { [create(:user)] }
     end
+
+    factory :project_with_events do
+      transient do
+        events_count 3
+      end
+
+      after(:build) do |project, evaluator|
+        create_list(:event, evaluator.events_count, project: project)
+      end
+    end
   end
 end

@@ -12,4 +12,6 @@ class User < ApplicationRecord
 
   has_many :user_tasks
   has_many :assigned_tasks, through: :user_tasks, source: :task
+
+  has_many :events, foreign_key: "author_id"
 end

@@ -4,4 +4,6 @@ class Project < ApplicationRecord
   belongs_to :user
   has_many :user_projects
   has_many :contributors, through: :user_projects, source: :user
+
+  has_many :events
 end
