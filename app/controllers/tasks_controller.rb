@@ -3,16 +3,6 @@ class TasksController < ApplicationController
   before_action :set_project, only: [:project_assigned, :update, :create, :new]
   before_action :set_task, only: [:show, :edit, :update, :destroy, :mark_as_done]
 
-  #/my_tasks or juts on home page
-  def user_assigned
-    @tasks = current_user.tasks
-  end
-
-  #/projects/2/tasks
-  def project_assigned
-    @tasks = @project.tasks
-  end
-
   #/projects/2/tasks/3
   def show
   end
@@ -62,7 +52,7 @@ class TasksController < ApplicationController
   private
 
   def set_project
-    @project = Project.find(params[:project_id || :id])
+    @project = Project.find(params[:project_id])
   end
 
   def set_task
