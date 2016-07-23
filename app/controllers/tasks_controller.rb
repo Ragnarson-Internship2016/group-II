@@ -11,7 +11,7 @@ class TasksController < ApplicationController
 
   # GET /projects/2/tasks
   def new
-    @task = current_user.tasks.new
+    @task = @project.tasks.new
   end
 
   # POST /projects/2/tasks
@@ -29,7 +29,7 @@ class TasksController < ApplicationController
 
   # PUT /projects/2/tasks/5/
   def update
-    @task = current_user.tasks.new(task_params) #params should have project_id
+    @task = current_user.tasks.new(task_params)
     if @task.update
       redirect_to [@project, @task], notice: "Task was successfully updated."
     else
@@ -66,7 +66,7 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description) # add project?
+    params.require(:task).permit(:title, :description)
   end
 
   def record_not_found
