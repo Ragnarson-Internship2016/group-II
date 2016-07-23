@@ -1,7 +1,9 @@
 class TasksController < ApplicationController
-  # before_action :authenticate_user!
-  before_action :set_project, only: [:project_assigned, :update, :create, :new]
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :mark_as_done]
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  before_action :authenticate_user!
+  before_action :set_project
+  before_action :set_task, except: [:new, :create]
+  before_action :check_if_params_match, except: [:new, :create]
 
   #/projects/2/tasks/3
   def show
@@ -38,15 +40,15 @@ class TasksController < ApplicationController
   def mark_as_done
     @task.done = true
     if @task.update
-      respond_to { |format| format.js } #change dynamically div
+      redirect_to [@project, @task], notice: "Task was successfully updated."
     else
-      respond_to { |format| format.js { render "unable_to_mark_as_done" } }
+      redirect_to project_tasks_path, notice: "Error, unable to mark as done"
     end
   end
 
   def destroy
     @task.destroy
-    redirect_to :back , notice: "Task was successfully destroyed."
+    redirect_to :back, notice: "Task was successfully destroyed."
   end
 
   private
@@ -56,10 +58,18 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @project = Task.find(params[:id])
+    @task = Task.find(params[:id])
+  end
+
+  def check_if_params_match
+    redirect_to root_path, notice: "Params don't match" unless @project.tasks.include?(@task)
   end
 
   def task_params
     params.require(:task).permit(:title, :description) # add project?
+  end
+
+  def record_not_found
+    redirect_to root_path, notice: "Error, wrong params in the request - record could not be found"
   end
 end
