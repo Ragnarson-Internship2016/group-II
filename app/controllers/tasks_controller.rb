@@ -2,20 +2,22 @@ class TasksController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_task, except: [:new, :create]
-  before_action :check_if_params_match, except: [:new, :create]
+  before_action :set_task, except: [:new, :create, :index]
+  before_action :check_if_params_match, except: [:new, :create, :index]
 
-  #/projects/2/tasks/3
+  def index
+    @tasks = @project.tasks.all
+  end
+
   def show
   end
 
-  # GET /projects/2/tasks
   def new
     @task = @project.tasks.new
   end
 
-  # POST /projects/2/tasks
   def create
+    @task = @project.tasks.new(task_params)
     if @task.save!
       redirect_to [@project, @task], notice: "Task was successfully created."
     else
@@ -23,14 +25,11 @@ class TasksController < ApplicationController
     end
   end
 
-  # GET /projects/2/tasks/5/edit
   def edit
   end
 
-  # PUT /projects/2/tasks/5/
   def update
-    @task = current_user.tasks.new(task_params)
-    if @task.update
+    if @task.update(task_params)
       redirect_to [@project, @task], notice: "Task was successfully updated."
     else
       render :edit
@@ -38,9 +37,8 @@ class TasksController < ApplicationController
   end
 
   def mark_as_done
-    @task.done = true
-    if @task.update
-      redirect_to [@project, @task], notice: "Task was successfully updated."
+    if @task.update(done: true)
+      redirect_to project_tasks_path, notice: "Task marked as DONE."
     else
       redirect_to project_tasks_path, notice: "Error, unable to mark as done"
     end
@@ -48,7 +46,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    redirect_to :back, notice: "Task was successfully destroyed."
+    redirect_to project_tasks_path, notice: "Task was successfully destroyed."
   end
 
   private
@@ -66,7 +64,7 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description)
+    params.require(:task).permit(:title, :description, :due_date)
   end
 
   def record_not_found
