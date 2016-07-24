@@ -6,7 +6,7 @@ RSpec.describe TasksController, type: :controller do
   let(:project) { task.project }
   let(:user) { project.user }
 
-  describe "when suer is not authenticated" do
+  describe "when user is not authenticated" do
     context "#index" do
       it "redirects to sign in page" do
         get :index, params: { project_id: project.id }
@@ -71,7 +71,7 @@ RSpec.describe TasksController, type: :controller do
       context "with proper params" do
         before { get :index, params: { project_id: project.id } }
 
-        it "assigns tasks" do
+        it "fetches tasks that belongs to requested project" do
           expect(assigns(:tasks)).to eq([task])
         end
 
@@ -99,7 +99,7 @@ RSpec.describe TasksController, type: :controller do
 
     describe "#show" do
       context "with proper params" do
-        context "when task and project are associated " do
+        context "when task and project are associated" do
           before { get :show, params: { project_id: project.id, id: task.id } }
 
           it "has a 200 status code" do
@@ -275,16 +275,16 @@ RSpec.describe TasksController, type: :controller do
           expect(assigns(:task)).to eql(Task.last)
         end
 
-        it "redircets to task show page after it was successfully saved in database" do
+        it "redirects to task show page after it was successfully saved in database" do
           expect(response).to redirect_to(project_task_path(Task.last.project, Task.last))
         end
 
-        it "shows successfull flush message " do
+        it "shows successful flush message" do
           expect(flash[:notice]).to include("Task was successfully created")
         end
       end
 
-      context "with invalid params" do #?
+      context "with invalid params" do
         before { post :create, params: { project_id: "foo", task: { a: "foo" } } }
 
         it "redirects to root path" do
