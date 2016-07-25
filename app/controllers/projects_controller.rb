@@ -2,6 +2,10 @@ class ProjectsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_poject, only: [:show, :edit, :update, :destroy]
 
+  def index
+    @projects = Project.all
+  end
+
   def managed_projects
     @projects = current_user.managed_projects.all
   end
