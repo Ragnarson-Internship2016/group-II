@@ -66,9 +66,10 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it "assigns all tasks to the instance variable" do
+      it "assigns all projects to the instance variable" do
         expect(assigns(:projects)).to eq(Project.all)
       end
+
       it "renders template index" do
         expect(response).to render_template(:index)
       end
@@ -191,7 +192,7 @@ RSpec.describe ProjectsController, type: :controller do
         expect(assigns(:project).title).to eql(attr[:title])
       end
 
-      it "redirects to task show page" do
+      it "redirects to project show page" do
         expect(response).to redirect_to project
       end
 

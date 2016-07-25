@@ -8,4 +8,15 @@ class Project < ApplicationRecord
   has_many :events, dependent: :destroy
 
   has_many :tasks, dependent: :destroy
+
+  def self.create_project(current_user, project)
+    transaction do
+      begin
+        project.save
+        UserProject.create(user: current_user, project: project)
+      rescue
+        false
+      end
+    end
+  end
 end

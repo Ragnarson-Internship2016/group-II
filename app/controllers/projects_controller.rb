@@ -1,5 +1,4 @@
 class ProjectsController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   before_action :authenticate_user!
   before_action :set_project, only: [:show, :edit, :update, :destroy]
 
@@ -24,7 +23,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = current_user.managed_projects.new(project_params)
-    if @project.save && UserProject.create(user: current_user, project: @project)
+    if Project.create_project(current_user, @project)
       redirect_to @project, notice: "Poject was successfully created."
     else
       render :new
@@ -55,9 +54,5 @@ class ProjectsController < ApplicationController
 
   def project_params
     params.require(:project).permit(:title, :description, :date)
-  end
-
-  def record_not_found
-    render file: 'public/404.html', status: :not_found
   end
 end
