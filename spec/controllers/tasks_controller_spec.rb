@@ -371,6 +371,7 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end

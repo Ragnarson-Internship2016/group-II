@@ -81,7 +81,7 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it "assigns all tasks to the instance variable" do
+      it "assigns all projects to the instance variable" do
         expect(assigns(:projects)).to eq(user.managed_projects)
       end
     end
@@ -93,7 +93,7 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it "assigns all tasks to the instance variable" do
+      it "assigns all projects to the instance variable" do
         expect(assigns(:projects)).to eq(user.contributed_projects)
       end
     end
@@ -215,7 +215,7 @@ RSpec.describe ProjectsController, type: :controller do
         expect(Project.all).to be_empty
       end
 
-      it "displays roper flush message" do
+      it "displays proper flush message" do
         expect(flash[:notice]).to include("Poject was successfully destroyed.")
       end
     end
