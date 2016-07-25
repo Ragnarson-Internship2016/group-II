@@ -1,0 +1,18 @@
+<%= form_for([project, task], url: url) do |f| %>
+  <div class="field">
+    <%= f.label :title %><br/>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br/>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :due_date %><br/>
+    <%= f.date_select :due_date %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
