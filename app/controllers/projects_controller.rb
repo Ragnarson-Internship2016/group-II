@@ -7,11 +7,11 @@ class ProjectsController < ApplicationController
     @projects = Project.all
   end
 
-  def managed_projects
+  def managed
     @projects = current_user.managed_projects.all
   end
 
-  def contributed_projects
+  def contributed
     @projects = current_user.contributed_projects.all
   end
 

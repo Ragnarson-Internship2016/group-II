@@ -74,8 +74,8 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe "GET #managed_projects" do
-      before { get :managed_projects }
+    describe "GET #managed" do
+      before { get :managed }
 
       it "returns http success" do
         expect(response).to have_http_status(:success)
@@ -86,9 +86,8 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-
     describe "GET #contributed_projects" do
-      before { get :contributed_projects }
+      before { get :contributed }
 
       it "returns http success" do
         expect(response).to have_http_status(:success)
@@ -98,7 +97,6 @@ RSpec.describe ProjectsController, type: :controller do
         expect(assigns(:projects)).to eq(user.contributed_projects)
       end
     end
-
 
     describe "GET #show" do
       context "with proper params" do
