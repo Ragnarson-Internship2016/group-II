@@ -1,2 +1,18 @@
-<h1>Projects#show</h1>
-<p>Find me in app/views/projects/show.html.erb</p>
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @project.title %>
+</p>
+<p>
+  Description:
+  <%= @project.description %>
+</p>
+<p>
+  Date:
+  <%= @project.date.strftime("%d/%m/%Y") %>
+</p>
+
+<%= link_to 'Edit', edit_project_path(@project) %> |
+<%= link_to 'Back', projects_path %>
+>>>>>>> Project views initial

@@ -1,2 +1,5 @@
-<h1>Projects#new</h1>
-<p>Find me in app/views/projects/new.html.erb</p>
+<h1>Create new project</h1>
+
+<%= render "form", project: @project %>
+
+<%= link_to 'Back', projects_path %>
