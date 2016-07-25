@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Your tasks</h1>
 
 <table>
@@ -8,6 +6,7 @@
       <th>Title</th>
       <th>Deadline</th>
       <th>Description</th>
+      <th>Finished</th>
       <th></th>
     </tr>
   </thead>
@@ -18,6 +17,11 @@
         <td><%= task.title %></td>
         <td><%= task.due_date %></td>
         <td><%= task.description[0, 100] %>...</td>
+        <td>
+          <% if task.done == true %>
+            X
+          <% end %>
+        </td>
         <td><%= link_to 'Show', [task.project, task], class: "btn" %></td>
       </tr>
     <% end %>

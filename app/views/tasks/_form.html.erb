@@ -1,7 +1,16 @@
 <%= form_for([project, task], url: url) do |f| %>
+  <% if task.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
   <div class="field">
     <%= f.label :title %><br/>
-    <%= f.text_field :title %>
+    <%= f.text_field :title, autofocus: true %>
   </div>
   <div class="field">
     <%= f.label :description %><br/>

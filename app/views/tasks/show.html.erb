@@ -21,6 +21,16 @@
       <td><%= @task.due_date %></td>
     </tr>
     <tr>
+      <td><h4>Status</h4></td>
+      <td>
+        <% if @task.done == true %>
+          Finished
+        <% else %>
+          In progress
+        <% end %>
+      </td>
+    </tr>
+    <tr>
       <td><h4>Participants</h4></td>
       <td>
         <% if @task.participants.empty? %>
@@ -37,24 +47,33 @@
   </tbody>
 </table>
 
-<% if @task.participants.include?(current_user) %>
-  <%= link_to "Leave task",
-    { controller: :user_tasks, action: :leave },
+<% if @task.done == false %>
+  <% if @task.participants.include?(current_user) %>
+    <%= link_to "Leave task",
+      { controller: :user_tasks, action: :leave },
+      method: :delete,
+      data: { confirm: "Are you sure?" },
+      class: "btn" %>
+  <% else %>
+    <%= link_to "Join task",
+      { controller: "user_tasks", action: :assign },
+      method: :post,
+      class: "btn" %>
+  <% end %>
+
+  <%= link_to 'Edit', [:edit, @task.project, @task], class: "btn" %>
+
+  <%= link_to 'Destroy',
+    [@task.project, @task],
     method: :delete,
-    data: { confirm: "Are you sure?" },
+    data: { confirm: 'Are you sure?' },
     class: "btn" %>
-<% else %>
-  <%= link_to "Join task",
-    { controller: "user_tasks", action: :assign },
-    method: :post,
+
+  <%= link_to 'Mark as done',
+    { action: :mark_as_done },
+    method: :put,
+    data: { confirm: 'Are you sure?' },
     class: "btn" %>
 <% end %>
-
-<%= link_to 'Edit', [:edit, @task.project, @task], class: "btn" %></td>
-<%= link_to 'Destroy',
-  [@task.project, @task],
-  method: :delete,
-  data: { confirm: 'Are you sure?' },
-  class: "btn" %>
 
 <%= link_to 'Back', project_tasks_path(@task.project), class: "btn" %>
