@@ -18,7 +18,7 @@ class TasksController < ApplicationController
 
   def create
     @task = @project.tasks.new(task_params)
-    if @task.save!
+    if @task.save
       redirect_to [@project, @task], notice: "Task was successfully created."
     else
       render :new
