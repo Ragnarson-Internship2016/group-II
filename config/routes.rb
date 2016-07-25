@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations" }
 
   root "home#index"
-
+  get "/managed_projects" => "projects#managed_projects"
+  get "/contributed_projects" => "projects#contributed_projects"
   resources :projects do
     resources :tasks
     post "/tasks/:id/assign" => "user_tasks#assign"

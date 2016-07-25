@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   before_action :authenticate_user!
-  before_action :set_poject, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [:show, :edit, :update, :destroy]
 
   def index
     @projects = Project.all
@@ -22,9 +23,9 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = current_user.managed_projects.new(poject_params)
-    if @project.save
-      redirect_to @poject, notice: "Poject was successfully created."
+    @project = current_user.managed_projects.new(project_params)
+    if @project.save && UserProject.create(user: current_user, project: @project)
+      redirect_to @project, notice: "Poject was successfully created."
     else
       render :new
     end
@@ -34,25 +35,29 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @poject.update(poject_params)
-      redirect_to @poject, notice: "Poject was successfully updated."
+    if @project.update(project_params)
+      redirect_to @project, notice: "Poject was successfully updated."
     else
       render :edit
     end
   end
 
   def destroy
-    @poject.destroy
-    redirect_to pojects_url, notice: "Poject was successfully destroyed."
+    @project.destroy
+    redirect_to projects_url, notice: "Poject was successfully destroyed."
   end
 
   private
 
   def set_project
-    @poject = Project.find(params[:id])
+    @project = Project.find(params[:id])
   end
 
   def project_params
-    params.require(:poject).permit(:title, :description, :date)
+    params.require(:project).permit(:title, :description, :date)
+  end
+
+  def record_not_found
+    render file: 'public/404.html', status: :not_found
   end
 end
