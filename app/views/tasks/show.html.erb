@@ -50,27 +50,27 @@
 <% if @task.done == false %>
   <% if @task.participants.include?(current_user) %>
     <%= link_to "Leave task",
-      { controller: :user_tasks, action: :leave },
+      { controller: :user_tasks, action: :leave , project_id: @task.project.id, id: @task.id },
       method: :delete,
       data: { confirm: "Are you sure?" },
       class: "btn" %>
   <% else %>
     <%= link_to "Join task",
-      { controller: "user_tasks", action: :assign },
+      { controller: :user_tasks, action: :assign , project_id: @task.project.id, id: @task.id },
       method: :post,
       class: "btn" %>
   <% end %>
 
   <%= link_to 'Edit', [:edit, @task.project, @task], class: "btn" %>
 
-  <%= link_to 'Destroy',
+  <%= link_to 'Remove',
     [@task.project, @task],
     method: :delete,
     data: { confirm: 'Are you sure?' },
     class: "btn" %>
 
   <%= link_to 'Mark as done',
-    { action: :mark_as_done },
+    { controller: :tasks, action: :mark_as_done , project_id: @task.project.id, id: @task.id },
     method: :put,
     data: { confirm: 'Are you sure?' },
     class: "btn" %>
