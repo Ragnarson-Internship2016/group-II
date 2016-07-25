@@ -1,0 +1,21 @@
+<div class="grid-item form-box 2/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
+  <h2>Change your password</h2>
+
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "form-stacked" }) do |f| %>
+    <%= devise_error_messages! %>
+    <%= f.hidden_field :reset_password_token %>
+
+    <%= f.label :password, "New password" %>
+
+    <% if @minimum_password_length %>
+      <%= f.label :password_confirmation, "#{@minimum_password_length} characters minimum", class: "extra-label" %>
+    <% end %>
+
+    <%= f.password_field :password, autofocus: true, autocomplete: "off" %>
+
+    <%= f.label :password_confirmation, "Confirm new password" %>
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+
+    <%= f.submit "Change my password", class: "btn btn-submit" %>
+  <% end %>
+</div>

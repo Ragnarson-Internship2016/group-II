@@ -1,0 +1,12 @@
+<div class="grid-item form-box 2/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
+  <h2>Resend confirmation instructions</h2>
+
+  <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "form-stacked" }) do |f| %>
+    <%= devise_error_messages! %>
+
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+
+    <%= f.submit "Resend confirmation instructions", class: "btn btn-submit" %>
+  <% end %>
+</div>
