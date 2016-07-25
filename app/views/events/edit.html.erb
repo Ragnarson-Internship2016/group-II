@@ -1,0 +1,8 @@
+<h1>Editing Event</h1>
+
+<%= render 'form',
+  project: @event.project,
+  event: @event,
+  url: [@event.project, @event] %>
+
+<%= link_to 'Back', project_events_path(@event.project) %>

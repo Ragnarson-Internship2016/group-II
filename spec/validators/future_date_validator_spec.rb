@@ -16,7 +16,7 @@ RSpec.describe FutureDateValidator do
 
     it "adds error message about nil" do
       subject.validate
-      expect(subject.errors.messages[:date].first).to eql("date is nil")
+      expect(subject.errors.messages[:date].first).to eql("must not be nil")
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe FutureDateValidator do
     it "adds error message about the past date" do
       subject.validate
       expect(subject.errors.messages[:date].first).
-        to eql("date not in future")
+        to eql("must be in future")
     end
   end
 

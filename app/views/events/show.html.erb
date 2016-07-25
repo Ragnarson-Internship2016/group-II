@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<div>Author: <%= "#{@event.author.name} #{@event.author.surname}" %></div>
+<div>Title: <%= @event.title %></div>
+<div>Description: <%= @event.description %></div>
+<div>Date: <%= @event.date %></div>
+
+<% if policy(@event).modify? %>
+  <%= link_to 'Edit', [:edit, @event.project, @event] %> |
+<% end %>
+<%= link_to 'Back', project_events_path(@event.project) %>

@@ -76,21 +76,26 @@ RSpec.describe Project, type: :model do
 
   context "when associated events exist" do
     context "when created with single project factory" do
-      subject { FactoryGirl.build(:project_with_events) }
+      subject { FactoryGirl.create(:project_with_events) }
 
       it "contains associated events count" do
         expect(subject.events.size).to eql(3)
       end
+
+      it "deletes events on project destroy" do
+        subject.user_projects.delete_all
+        expect { subject.destroy }.to change { subject.events.count }.by(-3)
+      end
     end
 
     context "when events added to existing project" do
-      subject { FactoryGirl.build(:project) }
+      subject { FactoryGirl.create(:project) }
 
       it "contains associated events" do
         events = 3.times.collect do
           FactoryGirl.create(:event, project: subject)
         end
-        expect(subject.events.to_a).to eql(events)
+        expect(subject.events.to_a).to match_array(events)
       end
     end
   end

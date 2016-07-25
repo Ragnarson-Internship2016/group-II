@@ -25,6 +25,21 @@ RSpec.describe Event, type: :model do
     end
   end
 
+  context "when author does not take part in project" do
+    subject { FactoryGirl.build(:event) }
+    before { subject.author = FactoryGirl.build(:user) }
+
+    it "is invalid" do
+      expect(subject).to be_invalid
+    end
+
+    it "adds error message about author" do
+      subject.validate
+      expect(subject.errors.messages[:author].first).
+        to eql("must take part in project")
+    end
+  end
+
   context "when project is not provided" do
     subject { FactoryGirl.build(:event, project_id: nil) }
 

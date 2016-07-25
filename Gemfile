@@ -9,6 +9,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'devise'
+gem 'pundit'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-hocus-pocus'

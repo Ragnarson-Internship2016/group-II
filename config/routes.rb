@@ -9,4 +9,8 @@ Rails.application.routes.draw do
     delete "/tasks/:id/leave" => "user_tasks#leave"
     put "/tasks/:id/done" => "tasks#mark_as_done"
   end
+
+  resources :projects do
+    resources :events
+  end
 end

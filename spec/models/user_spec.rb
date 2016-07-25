@@ -64,9 +64,9 @@ RSpec.describe User, type: :model do
   end
 
   context "when associated events exist" do
-    subject { FactoryGirl.build(:user) }
+    subject { FactoryGirl.create(:user) }
     let!(:events) do
-      3.times.collect { FactoryGirl.create(:event, author: subject) }
+      3.times.collect { FactoryGirl.create(:event, author_id: subject.id) }
     end
 
     it "contains associated events count" do
@@ -75,6 +75,11 @@ RSpec.describe User, type: :model do
 
     it "contains associated events" do
       expect(subject.events.to_a).to eql(events)
+    end
+
+    it "deletes events on user destroy" do
+      subject.user_projects.delete_all
+      expect { subject.destroy }.to change { subject.events.count }.by(-3)
     end
   end
 end

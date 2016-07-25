@@ -14,7 +14,7 @@ FactoryGirl.define do
         events_count 3
       end
 
-      after(:build) do |project, evaluator|
+      after(:create) do |project, evaluator|
         create_list(:event, evaluator.events_count, project: project)
       end
     end
