@@ -60,7 +60,7 @@ class TasksController < ApplicationController
   end
 
   def check_if_params_match
-    redirect_to root_path, notice: "Params don't match" unless @project.tasks.include?(@task)
+    redirect_to root_path, notice: "Error, requested task is not associated with this project" unless @project.tasks.include?(@task)
   end
 
   def task_params

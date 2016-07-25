@@ -127,7 +127,7 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
-            expect(flash[:notice]).to include("Params don't match")
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end
@@ -162,7 +162,7 @@ RSpec.describe TasksController, type: :controller do
       end
 
       context "with improper params" do
-        before { get :new, params: { project_id: 123 } }
+        before { get :new, params: { project_id: Project.last.id + 1 } }
 
         it "redirects to root path" do
           expect(response).to redirect_to(root_path)
@@ -204,13 +204,13 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
-            expect(flash[:notice]).to include("Params don't match")
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end
 
       context "with improper params" do
-        before { get :edit, params: { project_id: 123, id: "foo" } }
+        before { get :edit, params: { project_id: Project.last.id + 1, id: "foo" } }
 
         it "redirects to root path" do
           expect(response).to redirect_to(root_path)
@@ -249,7 +249,7 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
-            expect(flash[:notice]).to include("Params don't match")
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end
@@ -324,7 +324,7 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
-            expect(flash[:notice]).to include("Params don't match")
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end
@@ -371,7 +371,7 @@ RSpec.describe TasksController, type: :controller do
           end
 
           it "returns proper flush message" do
-            expect(flash[:notice]).to include("Params don't match")
+            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
           end
         end
       end
