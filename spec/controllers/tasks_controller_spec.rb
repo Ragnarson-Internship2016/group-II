@@ -69,30 +69,40 @@ RSpec.describe TasksController, type: :controller do
 
     describe "#index" do
       context "with proper params" do
-        before { get :index, params: { project_id: project.id } }
-
-        it "fetches tasks that belongs to requested project" do
-          expect(assigns(:tasks)).to eq([task])
+        before do
+          sign_in(signed_user)
+          get :index, params: { project_id: project.id }
         end
 
-        it "has a 200 status code" do
-          expect(response.status).to eq(200)
+        context "when signed in as project contributor" do
+          let(:signed_user) { user }
+
+          it "fetches tasks that belongs to requested project" do
+            expect(assigns(:tasks)).to eq([task])
+          end
+
+          it "has a 200 status code" do
+            expect(response.status).to eq(200)
+          end
+
+          it "redirects to index page" do
+            expect(response).to render_template(:index)
+          end
         end
 
-        it "redirects to index page" do
-          expect(response).to render_template(:index)
+        context "when signed in as non-participant" do
+          let(:signed_user) { FactoryGirl.create(:user) }
+
+          it "returns forbidden status" do
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
 
-      context "with improper params" do
-        before { get :index, params: { project_id: "foo" } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+      context "with not existing project id" do
+        it "redirects to root" do
+          expect(get :index, params: { project_id: "foo" }).
+            to redirect_to(root_url)
         end
       end
     end
@@ -119,28 +129,20 @@ RSpec.describe TasksController, type: :controller do
           end
         end
 
-        context "when task and project are NOT associated " do
-          before { get :show, params: { project_id: another_task.project.id, id: task.id } }
-
-          it "redirects to root path if project and task dont match" do
-            expect(response).to redirect_to(root_path)
-          end
-
-          it "returns proper flush message" do
-            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
+        context "when task and project are NOT associated" do
+          it "redirects to root" do
+            expect(get :show, params: {
+              project_id: another_task.project.id, id: task.id
+            }).to redirect_to(root_url)
           end
         end
       end
 
-      context "with improper params" do
-        before { get :show, params: { project_id: another_task.project.id, id: "foo" } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+      context "with invalid project id" do
+        it "redirects to root" do
+          expect(get :show, params: {
+            project_id: another_task.project.id, id: "foo"
+          }).to redirect_to(root_url)
         end
       end
     end
@@ -161,15 +163,10 @@ RSpec.describe TasksController, type: :controller do
         end
       end
 
-      context "with improper params" do
-        before { get :new, params: { project_id: Project.last.id + 1 } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+      context "with invalid project id" do
+        it "redirects to root" do
+          expect(get :new, params: {project_id: "foo"}).
+            to redirect_to(root_url)
         end
       end
     end
@@ -197,27 +194,19 @@ RSpec.describe TasksController, type: :controller do
         end
 
         context "when task and project are NOT associated" do
-          before { get :edit, params: { project_id: another_task.project.id, id: task.id } }
-
-          it "redirects to root path if project and task dont match" do
-            expect(response).to redirect_to(root_path)
-          end
-
-          it "returns proper flush message" do
-            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
+          it "redirects to root" do
+            expect(get :edit, params: {
+              project_id: another_task.project.id, id: task.id
+            }).to redirect_to(root_url)
           end
         end
       end
 
-      context "with improper params" do
-        before { get :edit, params: { project_id: Project.last.id + 1, id: "foo" } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+      context "with invalid event and project id" do
+        it "redirects to root" do
+          expect(get :edit, params: {
+            project_id: "foo", id: "foo"
+          }).to redirect_to(root_url)
         end
       end
     end
@@ -277,7 +266,7 @@ RSpec.describe TasksController, type: :controller do
             end
 
             it "renders proper flash message" do
-              expect(flash[:notice]).to include("Error, requested task is not associated with this project")
+              expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
             end
           end
         end
@@ -328,18 +317,6 @@ RSpec.describe TasksController, type: :controller do
           expect(flash[:notice]).to include("Task was successfully created")
         end
       end
-
-      context "with invalid params" do
-        before { post :create, params: { project_id: "foo", task: { a: "foo" } } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
-        end
-      end
     end
 
     describe "#update" do
@@ -359,30 +336,6 @@ RSpec.describe TasksController, type: :controller do
           it "returns proper flush message" do
             expect(flash[:notice]).to include("Task was successfully updated.")
           end
-        end
-
-        context "when task and project are NOT associated" do
-          before { patch :update, params: { project_id: task.project.id, id: another_task.id, task: FactoryGirl.attributes_for(:task) } }
-
-          it "redirects to root path if project and task dont match" do
-            expect(response).to redirect_to(root_path)
-          end
-
-          it "returns proper flush message" do
-            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
-          end
-        end
-      end
-
-      context "with invalid params" do
-        before { patch :update, params: { project_id: task.project.id, id: "foo", task: FactoryGirl.attributes_for(:task) } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
         end
       end
     end
@@ -406,30 +359,6 @@ RSpec.describe TasksController, type: :controller do
             delete :destroy, params: { project_id: task.project.id, id: task.id }
             expect(flash[:notice]).to include("Task was successfully destroyed.")
           end
-        end
-
-        context "when task and project are NOT associated" do
-          before { delete :destroy, params: { project_id: task.project.id, id: another_task.id } }
-
-          it "redirects to root path if project and task dont match" do
-            expect(response).to redirect_to(root_path)
-          end
-
-          it "returns proper flush message" do
-            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
-          end
-        end
-      end
-
-      context "with invalid params" do
-        before { delete :destroy, params: { project_id: task.project.id, id: "foo" } }
-
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
-        end
-
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
         end
       end
     end

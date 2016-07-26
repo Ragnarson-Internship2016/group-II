@@ -2,8 +2,8 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_project_access
-  before_action :authorize_event_modify, only: [:update, :destroy]
+  before_action { authorize @project, :access? }
+  before_action only: [:update, :destroy] { authorize @event, :modify? }
 
   def index
     @events = @project.events
@@ -53,23 +53,15 @@ class EventsController < ApplicationController
 
   private
 
-  def set_event
-    @event = Event.find_by_id(params[:id]) || raise_not_found
+  def set_project
+    @project = Project.find(params[:project_id])
   end
 
-  def set_project
-    @project = Project.find_by_id(params[:project_id]) || raise_not_found
+  def set_event
+    @event = @project.events.find(params[:id])
   end
 
   def event_params
     params.require(:event).permit(:title, :description, :date)
-  end
-
-  def authorize_project_access
-    authorize @project, :access?
-  end
-
-  def authorize_event_modify
-    authorize @event, :modify?
   end
 end

@@ -55,4 +55,11 @@ RSpec.describe "events/index", type: :view do
       href: "/projects/#{project.id}/events/new"
     )
   end
+
+  it "renders link to project" do
+    expect(rendered).to have_link(
+      "Back to project",
+      href: "/projects/#{project.id}"
+    )
+  end
 end

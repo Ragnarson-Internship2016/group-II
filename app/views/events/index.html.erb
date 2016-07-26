@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Events</h1>
+<h1>Events in this project</h1>
 
 <table>
   <thead>
@@ -28,4 +28,5 @@
   </tbody>
 </table>
 
-<%= link_to 'New Event', new_project_event_path(@project.id) %>
+<%= link_to 'New Event', new_project_event_path(@project) %>
+<%= link_to 'Back to project', @project %>

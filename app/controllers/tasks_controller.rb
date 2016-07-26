@@ -1,9 +1,8 @@
 class TasksController < ApplicationController
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   before_action :authenticate_user!
   before_action :set_project
   before_action :set_task, except: [:new, :create, :index]
-  before_action :check_if_params_match, except: [:new, :create, :index]
+  before_action { authorize @project, :access? }
 
   def index
     @tasks = @project.tasks.all
@@ -60,16 +59,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = Task.find(params[:id])
-  end
-
-  def check_if_params_match
-    unless @project.tasks.include?(@task)
-      respond_to do |format|
-        format.html { redirect_to root_path, notice: "Error, requested task is not associated with this project" }
-        format.json { head :not_found }
-      end
-    end
+    @task = @project.tasks.find(params[:id])
   end
 
   def task_params
