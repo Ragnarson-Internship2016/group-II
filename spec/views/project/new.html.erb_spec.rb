@@ -1,21 +1,20 @@
+require 'rails_helper'
+
 RSpec.describe "projects/new", type: :view do
- let(:project) { FactoryGirl.create(:project) }
- let(:user) { FactoryGirl.create(:user) }
+  let(:project) { FactoryGirl.create(:project) }
+  let(:user) { FactoryGirl.create(:user) }
  
-   before do
+  before do
     sign_in user
     assign(:project, project)
-    visit('/projects/new')
+    render
   end
 
+  it "display page header" do
+    expect(rendered).to include("Create new project")
+  end
 
-it "Signing in with correct credentials" do
-  
-  fill_in('Project title', with: 'TextMate 2')
-  fill_in('Project description', with: 'A text-editor for OS X')
-  fill_in('Due date', with: '11.11.2018')      
-
-  click_button('Create project')
-  expect(page).to have_content('Project has been created.')
-end
+  it "renders link to tasks index" do
+    expect(rendered).to have_link("Back", href: "/projects")
+  end
 end
