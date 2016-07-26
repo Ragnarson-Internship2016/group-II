@@ -1,0 +1,181 @@
+.form-box {
+  padding: 0 $spacing-unit $spacing-unit $spacing-unit;
+  overflow: auto;
+
+  background: #FFFFFF;
+  border-radius: $ui-border-radius;
+
+  h2 {
+    @include font-size-heading(1, $font-size-h2);
+
+    width: 100%;
+
+    text-align: center;
+    color: $color-gray;
+  }
+
+  form {
+    margin: 0;
+  }
+
+  #error_explanation {
+    @extend .box-negative;
+
+    margin-bottom: $spacing-unit;
+    overflow: auto;
+
+    border-radius: $ui-border-radius;
+
+    h2 {
+      @include font-size-heading(0, $font-size-h4);
+      color: darken($color-negative, 25%);
+    }
+
+    ul {
+      padding-left: $spacing-unit;
+    }
+  }
+}
+
+.form-stacked {
+  width: 100%;
+
+  label {
+    @include font-size($font-size-small);
+
+    float: left;
+    padding-left: 3px;
+    margin-bottom: quarter($spacing-unit);
+
+    color: $color-gray;
+    font-weight: 900;
+
+    &.extra-label {
+      @include font-size($font-size-small);
+
+      float: right;
+      font-weight: normal;
+    }
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  textarea {
+    width: calc(100%);
+    height: 40px;
+
+    border: 2px solid $color-silver;
+    border-radius: $ui-border-radius;
+
+    transition: .1s border;
+
+    &:focus {
+      outline: 0;
+      border: 2px solid darken($color-silver, 15%);
+    }
+  }
+
+  em {
+    display: inline-block;
+  }
+
+  input[type="submit"] {
+    float: right;
+  }
+
+  input[type="checkbox"] + label {
+    display: inline-block;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  input[type="checkbox"] + label {
+    position: relative;
+    padding-left: 36px;
+    float: left;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  input[type="checkbox"] + label:before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    box-sizing: border-box;
+
+    color: $color-gray;
+    background: #FFFFFF;
+
+    text-align: center;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 22px;
+
+    border: 2px solid $color-silver;
+    border-radius: $ui-border-radius;
+  }
+
+  input[type="checkbox"]:checked + label:before {
+    border: 2px solid $brand-color;
+  }
+
+  input[type="checkbox"]:checked + label:after {
+    content: "";
+
+    position: absolute;
+    top: 6px;
+    left: 6px;
+
+    width: 12px;
+    height: 12px;
+    box-sizing: border-box;
+
+    background: $brand-color;
+
+    border-radius: $ui-border-radius - 1px;
+  }
+
+  .btn-container {
+    overflow: auto;
+  }
+
+  .field_with_errors > input[type="text"],
+  .field_with_errors > input[type="email"],
+  .field_with_errors > input[type="password"],
+  .field_with_errors > input[type="search"],
+  .field_with_errors > input[type="url"],
+  .field_with_errors > textarea {
+    border: 2px solid lighten($color-negative, 25%);
+  }
+
+  .field_with_errors + .btn-container {
+    margin-top: $spacing-unit;
+  }
+}
+
+@include rwd("mobile") {
+  .form-stacked {
+    .grid-item {
+      margin-bottom: $spacing-unit;
+    }
+
+    .grid-item:last-of-type {
+      margin-bottom: 0;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+    }
+  }
+}
