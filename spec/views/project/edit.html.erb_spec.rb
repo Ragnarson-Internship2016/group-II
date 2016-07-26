@@ -7,6 +7,8 @@ RSpec.describe "projects/edit", type: :view do
 
   before do
     sign_in user
+    assign(:project, project)
+    render
   end
 
   it "contains form to correct url" do
