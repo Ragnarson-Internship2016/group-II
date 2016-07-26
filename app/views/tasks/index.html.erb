@@ -22,10 +22,16 @@
             X
           <% end %>
         </td>
-        <td><%= link_to 'Show', [task.project, task], class: "btn" %></td>
+        <td><%= link_to "Show", [task.project, task], class: "btn" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to 'Create new task', new_project_task_path(@project.id), class: "btn" %>
+<%= link_to "Create new task",
+  new_project_task_path(@project.id),
+  class: "btn" %>
+
+<%= link_to "Back to project",
+  project_path(@project.id),
+  class: "btn" %>

@@ -103,7 +103,7 @@ RSpec.describe "tasks/show", type: :view do
     end
 
     it "does not redner link to delete task" do
-      expect(rendered).not_to have_link(
+      expect(rendered).to have_link(
         "Remove",
         href: "/projects/#{project.id}/tasks/#{@task.id}")
     end

@@ -10,10 +10,11 @@ RSpec.describe "tasks/edit", type: :view do
   end
 
   it "contains correct url in form" do
-    expect(rendered).to have_selector('form[action="%s"][method="%s"]' % [
-      "/projects/#{@task.project_id}/tasks/#{@task.id}",
-      "post"
-    ])
+    expect(rendered).to
+      have_selector('form[action="%s"][method="%s"]' % [
+        "/projects/#{@task.project_id}/tasks/#{@task.id}",
+        "post"
+      ])
   end
 
   it "renders link to tasks index" do

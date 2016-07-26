@@ -1,8 +1,10 @@
 <h1>Create new task</h1>
 
-<%= render 'form',
+<%= render "form",
   project: @task.project,
   task: @task,
   url: project_tasks_path(@task.project) %>
 
-<%= link_to 'Back', project_tasks_path(@task.project), class: "btn" %>
+<%= link_to "Back",
+  project_tasks_path(@task.project),
+  class: "btn" %>

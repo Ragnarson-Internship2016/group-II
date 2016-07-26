@@ -37,13 +37,25 @@ RSpec.describe "tasks/index", type: :view do
   end
 
   it "renders links to tasks' shows" do
-    expect(rendered).to have_link("Show", href: "/projects/#{project.id}/tasks/#{tasks[0].id}")
-    expect(rendered).to have_link("Show", href: "/projects/#{project.id}/tasks/#{tasks[1].id}")
-    expect(rendered).to have_link("Show", href: "/projects/#{project.id}/tasks/#{tasks[2].id}")
+    expect(rendered).to
+      have_link(
+        "Show",
+        href: "/projects/#{project.id}/tasks/#{tasks[0].id}")
+    expect(rendered).to
+      have_link(
+        "Show",
+        href: "/projects/#{project.id}/tasks/#{tasks[1].id}")
+    expect(rendered).to
+      have_link(
+        "Show",
+        href: "/projects/#{project.id}/tasks/#{tasks[2].id}")
   end
 
   it "renders link to add new task" do
-    expect(rendered).to have_link("Create new task", href: "/projects/#{project.id}/tasks/new")
+    expect(rendered).to
+      have_link(
+        "Create new task",
+        href: "/projects/#{project.id}/tasks/new")
   end
 
   it "renders links with class button" do
