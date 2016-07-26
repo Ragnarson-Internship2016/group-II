@@ -5,6 +5,8 @@ class Task < ApplicationRecord
   has_many :user_tasks, dependent: :destroy
   has_many :participants, through: :user_tasks, source: :user
 
+  has_many :notifications, as: :notificable
+
   belongs_to :project
 
   scope :projects_with_not_done_tasks, -> { not_done.group_by(&:project) }

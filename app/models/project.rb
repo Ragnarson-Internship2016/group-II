@@ -9,6 +9,8 @@ class Project < ApplicationRecord
 
   has_many :tasks, dependent: :destroy
 
+  has_many :notifications, as: :notificable
+
   def self.create_project(current_user, project)
     transaction do
       begin

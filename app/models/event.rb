@@ -2,6 +2,8 @@ class Event < ApplicationRecord
   belongs_to :author, class_name: "User"
   belongs_to :project
 
+  has_many :notifications, as: :notificable
+
   validates :title, :date, presence: true
   validates :date, future_date: true
   validate :author_must_take_part_in_project
