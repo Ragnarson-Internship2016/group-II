@@ -1,0 +1,10 @@
+<h1>Edit task</h1>
+
+<%= render "form",
+  project: @task.project,
+  task: @task,
+  url: project_task_path(@task.project, @task) %>
+
+<%= link_to "Back",
+  project_tasks_path(@task.project),
+  class: "btn" %>
