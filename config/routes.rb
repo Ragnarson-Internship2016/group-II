@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   end
 
   resources :projects do
+    post "/create" => "user_projects#create"
+    delete "/destroy" => "user_projects#destroy"
     collection do
       get "managed"
       get "contributed"
