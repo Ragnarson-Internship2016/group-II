@@ -13,6 +13,9 @@ class ApplicationController < ActionController::Base
   end
 
   def record_not_found
-    redirect_to root_path, notice: "Error, wrong params in the request - record could not be found"
+    respond_to do |format|
+      format.html { redirect_to root_path, notice: "Error, wrong params in the request - record could not be found" }
+      format.json { head :not_found }
+    end
   end
 end

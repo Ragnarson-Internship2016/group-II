@@ -14,6 +14,7 @@ gem 'pundit'
 source 'https://rails-assets.org' do
   gem 'rails-assets-hocus-pocus'
   gem 'rails-assets-font-awesome'
+  gem 'rails-assets-reqwest'
 end
 
 group :development, :test do

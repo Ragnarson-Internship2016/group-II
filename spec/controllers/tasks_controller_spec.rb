@@ -224,45 +224,90 @@ RSpec.describe TasksController, type: :controller do
 
     describe "#mark_as_done" do
       context "with valid params" do
+        let(:params) { { project_id: project.id, id: task.id } }
 
-        context "when task and project are associated" do
-          before { put :mark_as_done, params: { project_id: project.id, id: task.id } }
-
-          it "redirects_to project_tasks page" do
-            expect(response).to redirect_to(project_tasks_path)
+        context "with JSON request" do
+          before do
+            put :mark_as_done, params: params, format: :json
           end
 
-          it "returns successful flush message" do
-            expect(flash[:notice]).to include("Task marked as DONE")
+          context "when task belongs to project" do
+            it "returns HTTP success" do
+              expect(response).to have_http_status(:success)
+            end
+
+            it "updates done field to true" do
+              expect(Task.find(task.id).done).to eql(true)
+            end
           end
 
-          it "updates done field to true" do
-            expect(assigns(:task).done).to eql(true)
+          context "when task doesn't belong to project" do
+            let(:params) { { project_id: project.id, id: another_task.id } }
+
+            it "returns HTTP not found" do
+              expect(response).to have_http_status(:not_found)
+            end
           end
         end
 
-        context "when task and project are NOT associated" do
-          before { put :mark_as_done, params: { project_id: project.id, id: another_task.id } }
-
-          it "redirects to root path if project and task dont match" do
-            expect(response).to redirect_to(root_path)
+        context "with HTML request" do
+          before do
+            put :mark_as_done, params: params
           end
 
-          it "returns proper flush message" do
-            expect(flash[:notice]).to include("Error, requested task is not associated with this project")
+          context "when task belongs to project" do
+            it "redirects to project's tasks" do
+              expect(response).to redirect_to(project_tasks_path)
+            end
+
+            it "renders proper flash message" do
+              expect(flash[:notice]).to include("Task marked as DONE")
+            end
+
+            it "updates done field to true" do
+              expect(Task.find(task.id).done).to eql(true)
+            end
+          end
+
+          context "when task doesn't belong to project" do
+            let(:params) { { project_id: project.id, id: another_task.id } }
+
+            it "redirects to root path" do
+              expect(response).to redirect_to(root_path)
+            end
+
+            it "renders proper flash message" do
+              expect(flash[:notice]).to include("Error, requested task is not associated with this project")
+            end
           end
         end
       end
 
-      context "with invalid params" do
-        before { put :mark_as_done, params: { project_id: project.id, id: "foo" } }
+      context "with not existing id" do
+        let(:params) { { project_id: project.id, id: -1 } }
 
-        it "redirects to root path" do
-          expect(response).to redirect_to(root_path)
+        context "with JSON request" do
+          before do
+            put :mark_as_done, params: params, format: :json
+          end
+
+          it "returns HTTP bad request" do
+            expect(response).to have_http_status(:not_found)
+          end
         end
 
-        it "return descriptive flush message" do
-          expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+        context "with HTML request" do
+          before do
+            put :mark_as_done, params: params
+          end
+
+          it "redirects to root path" do
+            expect(response).to redirect_to(root_path)
+          end
+
+          it "renders proper flash message" do
+            expect(flash[:notice]).to include("Error, wrong params in the request - record could not be found")
+          end
         end
       end
     end

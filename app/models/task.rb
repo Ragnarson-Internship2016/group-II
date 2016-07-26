@@ -7,6 +7,10 @@ class Task < ApplicationRecord
 
   belongs_to :project
 
+  def form_id
+    "#{project.id}-#{id}"
+  end
+
   private
   def validate_due_date_not_in_past
     if due_date && due_date < Date.today

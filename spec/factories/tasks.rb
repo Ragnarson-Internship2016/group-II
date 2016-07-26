@@ -4,5 +4,9 @@ FactoryGirl.define do
     description Faker::Lorem.sentence
     due_date Faker::Time.forward(10)
     project
+
+    factory :assigned_task do
+      participants { [create(:user)] }
+    end
   end
 end
