@@ -1,4 +1,4 @@
-<h1>Your tasks</h1>
+<h1>Tasks in this project</h1>
 
 <table>
   <thead>
@@ -18,7 +18,7 @@
         <td><%= task.due_date %></td>
         <td><%= task.description[0, 100] %>...</td>
         <td>
-          <% if task.done == true %>
+          <% if task.done %>
             X
           <% end %>
         </td>

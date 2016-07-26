@@ -23,7 +23,7 @@
     <tr>
       <td><h4>Status</h4></td>
       <td>
-        <% if @task.done == true %>
+        <% if @task.done %>
           Finished
         <% else %>
           In progress
@@ -47,7 +47,7 @@
   </tbody>
 </table>
 
-<% if @task.done == false %>
+<% unless @task.done %>
   <% if @task.participants.include?(current_user) %>
     <%= link_to "Leave task",
       { controller: :user_tasks, action: :leave , project_id: @task.project.id, id: @task.id },
@@ -63,17 +63,17 @@
 
   <%= link_to 'Edit', [:edit, @task.project, @task], class: "btn" %>
 
-  <%= link_to 'Remove',
-    [@task.project, @task],
-    method: :delete,
-    data: { confirm: 'Are you sure?' },
-    class: "btn" %>
-
   <%= link_to 'Mark as done',
     { controller: :tasks, action: :mark_as_done , project_id: @task.project.id, id: @task.id },
     method: :put,
     data: { confirm: 'Are you sure?' },
     class: "btn" %>
 <% end %>
+
+<%= link_to 'Remove',
+  [@task.project, @task],
+  method: :delete,
+  data: { confirm: 'Are you sure?' },
+  class: "btn" %>
 
 <%= link_to 'Back', project_tasks_path(@task.project), class: "btn" %>
