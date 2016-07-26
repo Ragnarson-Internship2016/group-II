@@ -15,3 +15,5 @@
 
 <%= link_to 'Edit', edit_project_path(@project) %> |
 <%= link_to 'Back', projects_path %>
+<%= link_to 'All tasks', project_tasks_path(@task.project) %> |
+<%= link_to 'All events', project_events_path(@event.project) %>

@@ -1,12 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "projects/new", type: :view do
-  let(:project) { FactoryGirl.create(:project) }
   let(:user) { FactoryGirl.create(:user) }
  
   before do
     sign_in user
-    assign(:project, project)
+    @project = assign(:project, FactoryGirl.create(:project))
     render
   end
 
