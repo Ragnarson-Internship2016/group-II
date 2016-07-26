@@ -59,7 +59,7 @@ RSpec.describe User, type: :model do
     it "returns list of assigned tasks if specified" do
       UserTask.create(user: user, task: first_task)
       UserTask.create(user: user, task: second_task)
-      expect(user.assigned_tasks.to_a).to eql([first_task, second_task])
+      expect(user.assigned_tasks.to_a).to match_array([first_task, second_task])
     end
   end
 
