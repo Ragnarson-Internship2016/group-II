@@ -66,8 +66,4 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(:title, :description, :due_date)
   end
-
-  def record_not_found
-    redirect_to root_path, notice: "Error, wrong params in the request - record could not be found"
-  end
 end
