@@ -15,6 +15,14 @@ RSpec.describe "projects/show", type: :view do
     expect(rendered).to include(@project.title)
   end
 
+  it "renders project description" do
+    expect(rendered).to include(@project.description)
+  end
+
+  it "renders formatted project due date" do
+    expect(rendered).to include(@project.date.strftime("%d/%m/%Y"))
+  end
+
   it "render link to project page" do
     expect(rendered).to have_link("Back", href: "/projects")
   end
