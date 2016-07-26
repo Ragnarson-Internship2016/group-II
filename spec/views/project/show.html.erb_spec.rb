@@ -28,10 +28,10 @@ RSpec.describe "projects/show", type: :view do
   end
 
   it "render link to project events page" do
-    expect(rendered). to have_link("All events", href: "/projects/#{@event.project_id}/events")
+    expect(rendered). to have_link("All events", href: "/projects/#{@project.id}/events")
   end
 
   it "render link to project tasks page" do
-    expect(rendered). to have_link("All tasks", href: "/projects/#{@task.project_id}/tasks")
+    expect(rendered). to have_link("All tasks", href: "/projects/#{@project.id}/tasks")
   end
 end
