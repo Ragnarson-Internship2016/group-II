@@ -119,7 +119,7 @@ RSpec.describe ProjectsController, type: :controller do
       context "with improper params" do
         it "sets status to 404" do
           get :show, params: { id: "foo" }
-          expect(response.status).to eq(404)
+          expect(response).to redirect_to root_path
         end
       end
     end
