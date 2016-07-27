@@ -7,6 +7,9 @@ class Task < ApplicationRecord
 
   belongs_to :project
 
+  scope :projects_with_not_done_tasks, -> { not_done.group_by(&:project) }
+  scope :not_done, -> { where(done: false) }
+
   def form_id
     "#{project.id}-#{id}"
   end
