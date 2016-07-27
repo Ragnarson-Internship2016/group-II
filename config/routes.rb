@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   get "/managed_projects" => "projects#managed_projects"
   get "/contributed_projects" => "projects#contributed_projects"
+  get "/notifications" => "notifications#index"
 
   authenticated :user do
     root "users#dashboard"

@@ -22,7 +22,7 @@ class EventsController < ApplicationController
   def create
     @event = @project.events.new(event_params)
     @event.author = current_user
-    if @event.save
+    if @event.save_and_notify current_user
       redirect_to(
         [@event.project, @event],
         notice: "Event was successfully created."
@@ -33,7 +33,7 @@ class EventsController < ApplicationController
   end
 
   def update
-    if @event.update(event_params)
+    if @event.update_and_notify(event_params, current_user)
       redirect_to(
         [@event.project, @event],
         notice: "Event was successfully updated."
