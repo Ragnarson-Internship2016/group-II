@@ -4,11 +4,13 @@ RSpec.describe ProjectsController, type: :controller do
   let!(:project) { FactoryGirl.create(:project) }
   let(:other_project) { FactoryGirl.build(:project) }
   let(:user) { project.user }
+  let(:non_participant) { FactoryGirl.create(:user) }
+  let(:contributor) { project.contributors.create(FactoryGirl.attributes_for(:user)) }
 
   context "when user is not authenticated" do
     context "#index" do
       it "redirects to sign in page" do
-        get :index, params: { id: project.id }
+        get :index
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -100,8 +102,35 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe "GET #show" do
-      context "with proper params" do
-        before { get :show, params: { id: project.id } }
+      context "when signed is as project manager" do
+        context "with proper params" do
+          before { get :show, params: { id: project.id } }
+
+          it "returns http success" do
+            expect(response).to have_http_status(:success)
+          end
+
+          it "fetches proper project" do
+            expect(assigns(:project)).to eq(Project.find(project.id))
+          end
+
+          it "renders show template" do
+            expect(response).to render_template(:show)
+          end
+        end
+
+        context "with not existing project id" do
+          it "redirects to root" do
+            expect(get :show, params: { id: "foo" }).to redirect_to(root_url)
+          end
+        end
+      end
+
+      context "when signed in as project contributor" do
+        before do
+          sign_in(contributor)
+          get :show, params: { id: project.id }
+        end
 
         it "returns http success" do
           expect(response).to have_http_status(:success)
@@ -110,16 +139,16 @@ RSpec.describe ProjectsController, type: :controller do
         it "fetches proper project" do
           expect(assigns(:project)).to eq(Project.find(project.id))
         end
-
-        it "renders show template" do
-          expect(response).to render_template(:show)
-        end
       end
 
-      context "with improper params" do
-        it "sets status to 404" do
-          get :show, params: { id: "foo" }
-          expect(response).to redirect_to root_path
+      context "when signes in as non-participant" do
+        before do
+          sign_in(non_participant)
+          get :show, params: { id: project.id }
+        end
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
@@ -140,7 +169,7 @@ RSpec.describe ProjectsController, type: :controller do
       end
     end
 
-    describe "  POST #create" do
+    describe "POST #create" do
       before { post :create, params: { project: other_project.attributes } }
 
       it "assign new project" do
@@ -165,59 +194,128 @@ RSpec.describe ProjectsController, type: :controller do
     end
 
     describe "GET #edit" do
-      before { get :edit, params: { id: project.id } }
-
-      it "returns http success" do
-        expect(response).to have_http_status(:success)
+      before do
+        sign_in(signed_user)
+        get :edit, params: { id: project.id }
       end
 
-      it "assigns a new project variabe in memory" do
-        expect(assigns(:project)).to eq(Project.find(project.id))
+      context "when signed in as project manager" do
+        let(:signed_user) { project.user }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "assigns a new project variabe in memory" do
+          expect(assigns(:project)).to eq(Project.find(project.id))
+        end
+
+        it "renders edit template" do
+          expect(response).to render_template(:edit)
+        end
       end
 
-      it "renders edit template" do
-        expect(response).to render_template(:edit)
+      context "when signed in as contributor" do
+        let(:signed_user) { contributor }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+
+      context "when signed in as non-participant" do
+        let(:signed_user) { non_participant }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
       end
     end
 
     describe "PUT #update" do
-      let!(:attr) { FactoryGirl.attributes_for(:project, title: "Old man and the sea") }
-      before { put :update, params: { id: project.id, project: attr } }
-
-      it "returns http success" do
-        expect(response).to have_http_status(:found)
+      let(:attr) { FactoryGirl.attributes_for(:project, title: "Old man and the sea") }
+      before do
+        sign_in(signed_user)
+        put :update, params: { id: project.id, project: attr }
       end
 
-      it "updates record" do
-        expect(assigns(:project).title).to eql(attr[:title])
+      context "when signed in as project manager" do
+        let(:signed_user) { project.user }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:found)
+        end
+
+        it "updates record" do
+          expect(assigns(:project).title).to eql(attr[:title])
+        end
+
+        it "redirects to project show page" do
+          expect(response).to redirect_to project
+        end
+
+        it "returns proper flush message" do
+          expect(flash[:notice]).to include("Poject was successfully updated.")
+        end
       end
 
-      it "redirects to project show page" do
-        expect(response).to redirect_to project
+      context "when signed in as contributor" do
+        let(:signed_user) { contributor }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
       end
 
-      it "returns proper flush message" do
-        expect(flash[:notice]).to include("Poject was successfully updated.")
+      context "when signed in as non-participant" do
+        let(:signed_user) { non_participant }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
       end
     end
 
     describe "DELETE #destroy" do
-      before { delete :destroy, params: { id: project.id } }
-
-      it "returns http success" do
-        expect(response).to have_http_status(:found)
+      before do
+        sign_in(signed_user)
+        delete :destroy, params: { id: project.id }
       end
 
-      it "redirects to projects url" do
-        expect(response).to redirect_to projects_path
+      context "when signed in as project manager" do
+        let(:signed_user) { project.user }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:found)
+        end
+
+        it "redirects to projects url" do
+          expect(response).to redirect_to projects_path
+        end
+
+        it "deletes the requested record " do
+          expect(Project.all).to be_empty
+        end
+
+        it "displays proper flush message" do
+          expect(flash[:notice]).to include("Poject was successfully destroyed.")
+        end
       end
 
-      it "deletes the requested record " do
-        expect(Project.all).to be_empty
+      context "when signed in as contributor" do
+        let(:signed_user) { contributor }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
       end
 
-      it "displays proper flush message" do
-        expect(flash[:notice]).to include("Poject was successfully destroyed.")
+      context "when signed in as non-participant" do
+        let(:signed_user) { non_participant }
+
+        it "returns forbidden status" do
+          expect(response).to have_http_status(:forbidden)
+        end
       end
     end
   end

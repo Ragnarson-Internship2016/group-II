@@ -1,6 +1,7 @@
 class UserTasksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task
+  before_action { authorize @task }
 
   def assign
     begin

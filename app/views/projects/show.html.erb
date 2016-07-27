@@ -11,7 +11,9 @@
   <%= @project.date.strftime("%d/%m/%Y") %>
 </p>
 
-<%= link_to "Edit", edit_project_path(@project) %> |
+<% if policy(@project).modify? %>
+  <%= link_to "Edit", edit_project_path(@project) %> |
+<% end %>
 <%= link_to "Back", projects_path %>
 <%= link_to "All tasks", project_tasks_path(@project) %> |
 <%= link_to "All events", project_events_path(@project) %>

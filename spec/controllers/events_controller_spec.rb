@@ -61,16 +61,16 @@ RSpec.describe EventsController, type: :controller do
     end
 
     context "when project does not exists" do
-      it "raises RoutingError" do
-        expect { get :index, params: {project_id: -1} }.
-          to raise_error(ActionController::RoutingError)
+      it "redirects to root" do
+        expect(get :index, params: {project_id: -1}).to redirect_to(root_url)
       end
     end
   end
 
   describe "GET #show" do
+    let(:event) { events.first }
+
     context "when event exists" do
-      let(:event) { events.first }
       before { get :show, params: {project_id: event.project_id, id: event.id} }
 
       it "assigns the requested event as @event" do
@@ -83,10 +83,17 @@ RSpec.describe EventsController, type: :controller do
     end
 
     context "when event does not exist" do
+      it "redirects to root" do
+        expect(get :show, params: {project_id: project.id, id: -1}).
+          to redirect_to(root_url)
+      end
+    end
 
-      it "raises RoutingError" do
-        expect { get :show, params: {project_id: project.id, id: -1} }.
-          to raise_error(ActionController::RoutingError)
+    context "when event does not belong to given project" do
+      it "redirects to root" do
+        expect(get :show, params: {
+          project_id: another_project.id, id: event.id
+        }).to redirect_to(root_url)
       end
     end
   end

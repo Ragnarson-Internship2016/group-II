@@ -1,8 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe UserTasksController, type: :controller do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:task) { FactoryGirl.create(:task) }
+  let(:project) { FactoryGirl.create(:project) }
+  let(:user) { project.user }
+  let(:contributor) { project.contributors.create(FactoryGirl.attributes_for(:user)) }
+  let(:task) { project.tasks.create(FactoryGirl.attributes_for(:task)) }
+  let(:non_participant) { FactoryGirl.create(:user) }
 
   context "when user is logged" do
     before do
@@ -10,34 +13,61 @@ RSpec.describe UserTasksController, type: :controller do
     end
 
     context "with proper params" do
-      context "#assign" do
+      describe "#assign" do
         before do
+          sign_in(signed_user)
           post :assign, params: { project_id: task.project.id, id: task.id }
         end
 
-        it "assigns task to the user" do
-          expect(assigns(:user_task)).to eql(UserTask.last)
+        context "when signed in as project contributor" do
+          let(:signed_user) { contributor }
+
+          it "assigns task to the user" do
+            expect(assigns(:user_task)).to eql(UserTask.last)
+          end
+
+          it "returns flash success message" do |variable|
+            expect(flash[:notice]).to include("Task successfully assigned.")
+          end
         end
 
-        it "returns flash success message" do |variable|
-          expect(flash[:notice]).to include("Task successfully assigned.")
+        context "when signed in as non participant" do
+          let(:signed_user) { non_participant }
+
+          it "returns forbidden status" do
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
 
-      context "#leave" do
+      describe "#leave" do
         before do
-          UserTask.create(user: user, task: task)
+          sign_in(signed_user)
+          UserTask.create(user: signed_user, task: task)
         end
 
-        it "removes task assignment" do
-          expect {
+        context "when signed in as project contributor" do
+          let(:signed_user) { contributor }
+
+          it "removes task assignment" do
+            expect {
+              delete :leave, params: { project_id: task.project.id, id: task.id }
+            }.to change { UserTask.all.size } .by(-1)
+          end
+
+          it "returns flash successfully removed from task assignment" do
             delete :leave, params: { project_id: task.project.id, id: task.id }
-          }.to change { UserTask.all.size } .by(-1)
+            expect(flash[:notice]).to include("Task assigment was removed.")
+          end
         end
 
-        it "returns flash successfully removed from task assignment" do
-          delete :leave, params: { project_id: task.project.id, id: task.id }
-          expect(flash[:notice]).to include("Task assigment was removed.")
+        context "when signed in as non participant" do
+          let(:signed_user) { non_participant }
+
+          it "returns forbidden status" do
+            delete :leave, params: { project_id: task.project.id, id: task.id }
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
     end

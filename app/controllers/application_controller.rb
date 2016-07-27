@@ -4,10 +4,6 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
-  def raise_not_found
-    raise ActionController::RoutingError.new("Not Found")
-  end
-
   def render_forbidden
     render status: :forbidden, plain: "403 Forbidden"
   end
