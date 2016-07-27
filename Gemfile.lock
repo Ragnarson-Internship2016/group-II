@@ -118,6 +118,7 @@ GEM
       sprockets-rails (>= 2.0.0)
     rails-assets-font-awesome (4.6.3)
     rails-assets-hocus-pocus (0.2.10)
+    rails-assets-reqwest (2.0.5)
     rails-controller-testing (0.1.1)
       actionpack (~> 5.x)
       actionview (~> 5.x)
@@ -211,6 +212,7 @@ DEPENDENCIES
   rails (~> 5.0.0)
   rails-assets-font-awesome!
   rails-assets-hocus-pocus!
+  rails-assets-reqwest!
   rails-controller-testing
   rspec-rails (~> 3.4)
   sass-rails (~> 5.0)

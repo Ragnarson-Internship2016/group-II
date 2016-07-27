@@ -37,10 +37,14 @@ class TasksController < ApplicationController
   end
 
   def mark_as_done
-    if @task.update(done: true)
-      redirect_to project_tasks_path, notice: "Task marked as DONE."
-    else
-      redirect_to project_tasks_path, notice: "Error, unable to mark as done"
+    respond_to do |format|
+      if @task.update(done: true)
+        format.html { redirect_to project_tasks_path, notice: "Task marked as DONE." }
+        format.json { head :ok }
+      else
+        format.html { redirect_to project_tasks_path, notice: "Error, unable to mark as done" }
+        format.json { head :bad_request }
+      end
     end
   end
 
@@ -60,7 +64,12 @@ class TasksController < ApplicationController
   end
 
   def check_if_params_match
-    redirect_to root_path, notice: "Error, requested task is not associated with this project" unless @project.tasks.include?(@task)
+    unless @project.tasks.include?(@task)
+      respond_to do |format|
+        format.html { redirect_to root_path, notice: "Error, requested task is not associated with this project" }
+        format.json { head :not_found }
+      end
+    end
   end
 
   def task_params

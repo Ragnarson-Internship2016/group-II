@@ -7,6 +7,9 @@ class Task < ApplicationRecord
 
   belongs_to :project
 
+  scope :projects_with_not_done_tasks, -> { not_done.group_by(&:project) }
+  scope :not_done, -> { where(done: false) }
+
   private
   def validate_due_date_not_in_past
     if due_date && due_date < Date.today

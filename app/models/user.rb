@@ -16,11 +16,10 @@ class User < ApplicationRecord
   has_many :events, foreign_key: "author_id", dependent: :destroy
 
   def takes_part_in_project?(project_id)
-    if self.managed_projects.any? { |project| project.id == project_id }
-      return true
-    elsif self.contributed_projects.any? { |project| project.id == project_id }
-      return true
-    end
-    false
+    projects.any? { |project| project.id == project_id }
+  end
+
+  def projects
+    managed_projects + contributed_projects
   end
 end

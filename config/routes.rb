@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "registrations" }
 
-  root "home#index"
   get "/managed_projects" => "projects#managed_projects"
   get "/contributed_projects" => "projects#contributed_projects"
+
+  authenticated :user do
+    root "users#dashboard"
+  end
 
   resources :projects do
     collection do
@@ -16,4 +19,6 @@ Rails.application.routes.draw do
     put "/tasks/:id/done" => "tasks#mark_as_done"
     resources :events
   end
+
+  root "home#index"
 end

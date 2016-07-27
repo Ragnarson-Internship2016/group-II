@@ -1,0 +1,62 @@
+.dashboard {
+  ul {
+    list-style-type: none;
+  }
+
+  h2 {
+    @include font-size-heading(1, $font-size-h3);
+    margin-top: 0;
+  }
+
+  h3 {
+    @include font-size($font-size-small);
+
+    color: #6f6f6f;
+
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  input[type="checkbox"] + label {
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .task-item {
+    display: block;
+    margin-top: $spacing-unit;
+    overflow: auto;
+
+    .task-title {
+      cursor: pointer;
+    }
+
+    .fa {
+      float: right;
+      color: $color-silver;
+
+      cursor: pointer;
+    }
+
+    .task-due-date {
+      float: left;
+      margin-top: 2px;
+      padding-left: 36px;
+      clear: both;
+
+      color: #6f6f6f;
+
+      @include font-size($font-size-micro);
+      font-weight: bold;
+    }
+
+    .task-extra {
+      padding: 10px 36px;
+      clear: both;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

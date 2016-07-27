@@ -1,0 +1,39 @@
+<div class="dashboard grid grid-center">
+  <main class="grid-item 2/3 mobile-1/1">
+    <h2>Your tasks</h2>
+
+    <ul>
+    <% @user_tasks.each do |project, tasks| %>
+      <h3><%= project.title %></h3>
+
+      <% tasks.each do |task| %>
+        <li class="task-item">
+          <%= check_box_tag task_form_id(task), nil, task.done %>
+          <%= label_tag task_form_id(task), task.title, class: "task-title" %>
+
+          <i class="fa fa-caret-down"></i>
+
+          <div class="task-due-date">
+            <%= "to #{task.due_date.to_formatted_s(:short)}" %>
+          </div>
+
+          <div class="task-extra hidden">
+            <p><%= task.description %></p>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+    </ul>
+  </main>
+
+  <aside class="grid-item 1/3 mobile-1/1">
+    <h2>Projects</h2>
+    <ul class="list-menu">
+    <% @user_projects.each do |project| %>
+      <li>
+        <%= link_to project.title, project_tasks_path(project) %>
+      </li>
+    <% end %>
+    </ul>
+  </main>
+</div>
