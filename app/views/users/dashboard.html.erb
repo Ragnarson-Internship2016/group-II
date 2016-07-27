@@ -8,8 +8,8 @@
 
       <% tasks.each do |task| %>
         <li class="task-item">
-          <%= check_box_tag task.form_id, nil, task.done %>
-          <%= label_tag task.form_id, task.title, class: "task-title" %>
+          <%= check_box_tag task_form_id(task), nil, task.done %>
+          <%= label_tag task_form_id(task), task.title, class: "task-title" %>
 
           <i class="fa fa-caret-down"></i>
 

@@ -20,6 +20,6 @@ class User < ApplicationRecord
   end
 
   def projects
-    self.managed_projects + self.contributed_projects
+    managed_projects + contributed_projects
   end
 end
