@@ -1,5 +1,4 @@
 module NotificationMethods
-
   def save_and_notify(current_user, target)
     transaction do
       begin
