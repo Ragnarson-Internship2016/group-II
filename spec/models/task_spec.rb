@@ -42,7 +42,7 @@ RSpec.describe Task, type: :model do
       task.due_date = Date.today - 1.day
       task.validate
       expect(task.errors.messages[:due_date].first).
-          to include("Date should not be in the past.")
+          to include("must be in future")
     end
   end
 
