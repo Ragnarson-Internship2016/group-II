@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Pundit
-  before_action :fetch_unread_notification_count
   protect_from_forgery with: :exception
+  before_action :fetch_unread_notification_count
   rescue_from Pundit::NotAuthorizedError, with: :render_forbidden
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
