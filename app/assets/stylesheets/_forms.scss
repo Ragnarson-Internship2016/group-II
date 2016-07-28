@@ -1,3 +1,24 @@
+.tasks.new,
+.tasks.show,
+.tasks.create,
+.tasks.edit {
+  background: $tasks-color;
+  }
+
+.events.new,
+.events.show,
+.events.create,
+.events.edit {
+  background: $events-color;
+  }
+
+.projects.new,
+.projects.show,
+.projects.create,
+.projects.edit {
+  background: $projects-color;
+  }
+
 .form-box {
   padding: 0 $spacing-unit $spacing-unit $spacing-unit;
   overflow: auto;

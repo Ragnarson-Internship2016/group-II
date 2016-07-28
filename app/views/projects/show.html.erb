@@ -1,20 +1,35 @@
-<p>
-  <strong>Title:</strong>
-  <%= @project.title %>
-</p>
-<p>
-  Description:
-  <%= @project.description %>
-</p>
-<p>
-  Date:
-  <%= @project.date.strftime("%d/%m/%Y") %>
-</p>
+<div class="grid-item form-box 4/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">
+        <h3>Project details</h3>
+      </th>
+    </tr>
+  </thead>
 
-<% if policy(@project).modify? %>
-  <%= link_to "Edit", edit_project_path(@project) %> |
-<% end %>
-<%= link_to "Back", projects_path %> |
-<%= link_to "All tasks", project_tasks_path(@project) %> |
-<%= link_to "All events", project_events_path(@project) %> |
-<%= link_to "Participants", project_participants_path(@project) %>
+  <tbody>
+    <tr>
+      <td><h4>Title</h4></td>
+      <td><%= @project.title %></td>
+    </tr>
+    <tr>
+      <td><h4>Description</h4></td>
+      <td><%= @project.description %></td>
+    </tr>
+    <tr>
+      <td><h4>Date</h4></td>
+      <td><%= @project.date.strftime("%d/%m/%Y") %></td>
+    </tr>
+    <tr>     
+  </tbody>
+</table>
+
+  <% if policy(@project).modify? %>
+    <%= link_to "Edit", edit_project_path(@project), class: "btn" %>
+  <% end %>
+  <%= link_to "Back", projects_path, class: "btn" %>
+  <%= link_to "All tasks", project_tasks_path(@project), class: "btn" %>
+  <%= link_to "All events", project_events_path(@project), class: "btn" %>
+  <%= link_to "Participants", project_participants_path(@project), class: "btn" %>
+</div>
