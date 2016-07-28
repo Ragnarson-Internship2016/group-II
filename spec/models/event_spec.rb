@@ -71,4 +71,77 @@ RSpec.describe Event, type: :model do
       expect(subject).to be_invalid
     end
   end
+
+
+  context "#updates_and_notifies" do
+    let(:event) { FactoryGirl.create(:event) }
+    let(:user) { event.project.user }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:different_user) { FactoryGirl.create(:user) }
+    let(:message) { "#{event.class} - #{event.title} has been recently updated :* description was changed to wind of change" }
+
+    before do
+      UserProject.create(user: another_user, project: event.project)
+      UserProject.create(user: different_user, project: event.project)
+      params = event.attributes
+      params["description"] = "wind of change"
+      event.update_and_notify params, user, :projects_contributors
+    end
+
+    it "updates event record" do
+      puts event.inspect
+      expect(event.description).to eql("wind of change")
+    end
+
+    it "sends notification to users that contribute to project it terms of which events exist" do
+      puts user.incoming_notifications.inspect
+      puts another_user.incoming_notifications.first.message.to_s
+      puts different_user.incoming_notifications.first.message.to_s
+      puts message.to_s
+      expect(user.incoming_notifications)
+          .to match_array([])
+
+      expect(another_user.incoming_notifications)
+          .to match_array(Notification.where(user: another_user, notificable: event))
+
+      expect(different_user.incoming_notifications)
+          .to match_array(Notification.where(user: different_user, notificable: event))
+    end
+
+    it "notifies users with a proper message" do
+      expect(different_user.incoming_notifications)
+          .to match_array(Notification.where(user: different_user, notificable: event, message: message))
+
+      expect(another_user.incoming_notifications)
+          .to match_array(Notification.where(user: another_user, notificable: event, message: message))
+    end
+  end
+
+  context "#saves_and_notifies" do
+    let(:event) { FactoryGirl.build(:event) }
+    let(:project) { event.project }
+    let(:user) { project.user }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:message) { "There is a new #{event.class} - #{event.title}, check this out!" }
+
+    before do
+      UserProject.create(user: another_user, project: project)
+      event.save_and_notify user, :projects_contributors
+    end
+
+    it "sends notification to users that are contributing to the project" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: event))
+    end
+
+    it "sends no notifications to the author" do
+      expect(user.incoming_notifications)
+          .to match_array([])
+    end
+
+    it "notifies users with a proper message" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: event, message: message))
+    end
+  end
 end

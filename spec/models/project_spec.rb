@@ -111,4 +111,59 @@ RSpec.describe Project, type: :model do
       expect { project.destroy }.to change { project.tasks.count }.by(-3)
     end
   end
+
+  context "#updates_and_notifies" do
+    let(:project) { FactoryGirl.create(:project) }
+    let(:user) { project.user }
+    let(:different_user) { FactoryGirl.create(:user) }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:message) { "#{project.class} - #{project.title} has been recently updated :* description was changed to wind of change" }
+
+    before do
+      UserProject.create(user: different_user, project: project)
+      UserProject.create(user: another_user, project: project)
+      params = project.attributes
+      params["description"] = "wind of change"
+      project.update_and_notify params, user, :contributors
+    end
+
+    it "updates project record" do
+      expect(project.description).to eql("wind of change")
+    end
+
+    it "sends notification to users that are contributors but not manager" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: project))
+
+      expect(different_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: different_user, notificable: project))
+    end
+
+    it "sends no notification to the manager" do
+      expect(user.incoming_notifications.to_a)
+          .to match_array([])
+    end
+
+    it "notifies users with a proper message" do
+      expect(different_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: different_user, notificable: project, message: message))
+
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: project, message: message))
+    end
+  end
+
+  context "#create_project" do
+    let(:user) { FactoryGirl.build(:user) }
+    let(:project) { FactoryGirl.build(:project) }
+    before{project.create_project(user) }
+
+    it "saves project to db" do
+      expect(project).to eq(Project.last)
+    end
+
+    it "assigns user to project contributors" do
+      expect(UserProject.last.user).to eq(user)
+    end
+  end
 end

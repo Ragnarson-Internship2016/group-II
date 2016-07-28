@@ -25,7 +25,7 @@ class ProjectsController < ApplicationController
 
   def create
     @project = current_user.managed_projects.new(project_params)
-    if Project.create_project(current_user, @project)
+    if @project.create_project(current_user)
       redirect_to @project, notice: "Poject was successfully created."
     else
       render :new
@@ -36,7 +36,7 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params)
+    if @project.update_and_notify(project_params, current_user, :contributors)
       redirect_to @project, notice: "Poject was successfully updated."
     else
       render :edit
@@ -44,7 +44,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project.destroy
+    @project.destroy_and_notify(current_user, :contributors)
     redirect_to projects_url, notice: "Poject was successfully destroyed."
   end
 

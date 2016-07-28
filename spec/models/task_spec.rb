@@ -42,7 +42,7 @@ RSpec.describe Task, type: :model do
       task.due_date = Date.today - 1.day
       task.validate
       expect(task.errors.messages[:due_date].first).
-      to include("Date should not be in the past.")
+          to include("Date should not be in the past.")
     end
   end
 
@@ -55,6 +55,70 @@ RSpec.describe Task, type: :model do
       UserTask.create(user: employee_mark, task: task)
       UserTask.create(user: employee_tom, task: task)
       expect(task.participants.to_a).to eql([employee_mark, employee_tom])
+    end
+  end
+
+  context "#updates_and_notifies" do
+    let(:task) { FactoryGirl.create(:task) }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:user) { task.project.user }
+    let(:message) { "#{task.class} - #{task.title} has been recently updated :* description was changed to wind of change" }
+
+    before do
+      UserProject.create(user: another_user, project: project)
+      UserTask.create(user: user, task: task)
+      UserTask.create(user: another_user, task: task)
+      params = task.attributes
+      params["description"] = "wind of change"
+      task.update_and_notify params, user, :participants
+    end
+
+    it "updates task record" do
+      expect(task.description).to eql("wind of change")
+    end
+
+    it "sends notification to users that are tasks participants" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: task))
+    end
+
+    it "sends no notification to the user that made changes" do
+      expect(user.incoming_notifications.to_a)
+          .to match_array([])
+    end
+
+    it "notifies users with a proper message" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: task, message: message))
+    end
+  end
+
+  context "#saves_and_notifies" do
+    let(:task) { FactoryGirl.build(:task) }
+    let(:project) { task.project }
+    let(:user) { project.user }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:message) { "There is a new #{task.class} - #{task.title}, check this out!" }
+
+    before do
+      UserProject.create(user: another_user, project: project)
+      UserTask.create(user: another_user, task: task)
+      task.save_and_notify user, :participants
+    end
+
+    it "sends notification to users that are contributing to the project" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: task))
+    end
+
+    it "sends no notifications to the author" do
+      expect(user.incoming_notifications)
+          .to match_array([])
+    end
+
+    it "notifies users with a proper message" do
+      expect(another_user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: another_user, notificable: task, message: message))
     end
   end
 end
