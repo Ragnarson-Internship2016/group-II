@@ -35,8 +35,8 @@ RSpec.describe Event, type: :model do
 
     it "adds error message about author" do
       subject.validate
-      expect(subject.errors.messages[:author].first).
-          to eql("must take part in project")
+      expect(subject.errors.messages[:author].first)
+        .to eql("must take part in project")
     end
   end
 
@@ -85,7 +85,7 @@ RSpec.describe Event, type: :model do
       UserProject.create(user: different_user, project: event.project)
       params = event.attributes
       params["description"] = "wind of change"
-      event.update_and_notify params, user, :projects_contributors
+      event.update_and_notify(params, user, :projects_contributors)
     end
 
     it "updates event record" do
@@ -93,25 +93,24 @@ RSpec.describe Event, type: :model do
     end
 
     it "sends notification to users that contribute to project it terms of which events exist" do
-
       expect(another_user.incoming_notifications)
-          .to match_array(Notification.where(user: another_user, notificable: event))
+        .to match_array(Notification.where(user: another_user, notificable: event))
 
       expect(different_user.incoming_notifications)
-          .to match_array(Notification.where(user: different_user, notificable: event))
+        .to match_array(Notification.where(user: different_user, notificable: event))
     end
 
     it "sends no notifications to the executor of action" do
       expect(user.incoming_notifications)
-          .to match_array([])
+        .to match_array([])
     end
 
     it "notifies users with a proper message" do
       expect(different_user.incoming_notifications)
-          .to match_array(Notification.where(user: different_user, notificable: event, message: message))
+        .to match_array(Notification.where(user: different_user, notificable: event, message: message))
 
       expect(another_user.incoming_notifications)
-          .to match_array(Notification.where(user: another_user, notificable: event, message: message))
+        .to match_array(Notification.where(user: another_user, notificable: event, message: message))
     end
   end
 
@@ -124,22 +123,22 @@ RSpec.describe Event, type: :model do
 
     before do
       UserProject.create(user: another_user, project: project)
-      event.save_and_notify user, :projects_contributors
+      event.save_and_notify(user, :projects_contributors)
     end
 
     it "sends notification to users that are contributing to the project" do
       expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: event))
+        .to match_array(Notification.where(user: another_user, notificable: event))
     end
 
     it "sends no notifications to the author" do
       expect(user.incoming_notifications)
-          .to match_array([])
+        .to be_empty
     end
 
     it "notifies users with a proper message" do
       expect(another_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 
@@ -151,7 +150,7 @@ RSpec.describe Event, type: :model do
 
     before do
       UserProject.create(user: user, project: event.project)
-      event.destroy_and_notify author, :projects_contributors
+      event.destroy_and_notify(author, :projects_contributors)
     end
 
     it "deletes event form db" do
@@ -159,17 +158,17 @@ RSpec.describe Event, type: :model do
     end
 
     it "sends no notifications to the executor of delete action" do
-      expect(author.incoming_notifications).to match_array([])
+      expect(author.incoming_notifications).to be_empty
     end
 
     it "sends proper notification to project contributors" do
       expect(user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: user, message: message))
+        .to match_array(Notification.where(user: user, message: message))
     end
 
     it "notifies user with a proper message" do
       expect(user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 end

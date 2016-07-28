@@ -9,7 +9,7 @@ class NotificationsController < ApplicationController
     if @notification.update_attribute(:read, true)
       redirect_to notifications_path
     else
-      redirect_to root_path, notice: "Unable to update notificaion"
+      redirect_to root_path, notice: "Unable to update notification"
     end
   end
 end

@@ -22,7 +22,7 @@ class EventsController < ApplicationController
   def create
     @event = @project.events.new(event_params)
     @event.author = current_user
-    if @event.save_and_notify(current_user, :projects_contributors )
+    if @event.save_and_notify(current_user, :projects_contributors)
       redirect_to(
         [@event.project, @event],
         notice: "Event was successfully created."
@@ -44,7 +44,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @event.destroy_and_notify current_user, :projects_contributors
+    @event.destroy_and_notify(current_user, :projects_contributors)
     redirect_to(
       project_events_path(@event.project),
       notice: "Event was successfully destroyed."

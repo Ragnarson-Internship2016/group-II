@@ -70,7 +70,7 @@ RSpec.describe Task, type: :model do
       UserTask.create(user: another_user, task: task)
       params = task.attributes
       params["description"] = "wind of change"
-      task.update_and_notify params, user, :participants
+      task.update_and_notify(params, user, :participants)
     end
 
     it "updates task record" do
@@ -79,17 +79,17 @@ RSpec.describe Task, type: :model do
 
     it "sends notification to users that are tasks participants" do
       expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: task))
+        .to match_array(Notification.where(user: another_user, notificable: task))
     end
 
     it "sends no notification to the user that made changes" do
       expect(user.incoming_notifications.to_a)
-          .to match_array([])
+        .to be_empty
     end
 
     it "notifies users with a proper message" do
       expect(another_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 
@@ -103,22 +103,22 @@ RSpec.describe Task, type: :model do
     before do
       UserProject.create(user: another_user, project: project)
       UserTask.create(user: another_user, task: task)
-      task.save_and_notify user, :participants
+      task.save_and_notify(user, :participants)
     end
 
     it "sends notification to users that are contributing to the project" do
       expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: task))
+        .to match_array(Notification.where(user: another_user, notificable: task))
     end
 
     it "sends no notifications to the author" do
       expect(user.incoming_notifications)
-          .to match_array([])
+        .to be_empty
     end
 
     it "notifies users with a proper message" do
       expect(another_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 
@@ -132,20 +132,20 @@ RSpec.describe Task, type: :model do
       UserProject.create(user: another_user, project: task.project)
       UserProject.create(user: user, project: task.project)
       UserTask.create(user: another_user, task: task)
-      task.destroy_and_notify user, :participants
+      task.destroy_and_notify(user, :participants)
     end
 
     it "deletes task form db" do
-      expect(Task.all).to eq([])
+      expect(Task.all).to be_empty
     end
 
     it "sends no notifications to the executor of delete action" do
-      expect(user.incoming_notifications).to match_array([])
+      expect(user.incoming_notifications).to be_empty
     end
 
     it "sends proper notification to project contributors" do
       expect(another_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 end

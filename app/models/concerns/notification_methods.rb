@@ -18,7 +18,6 @@ module NotificationMethods
         self.update!(params)
         attributes_changed = self.previous_changes
         attributes_changed.delete("updated_at")
-        puts attributes_changed.to_s
         message = record_updated_message(attributes_changed)
         !attributes_changed.empty? ? deliver_notification(target, message, current_user) : true
       rescue

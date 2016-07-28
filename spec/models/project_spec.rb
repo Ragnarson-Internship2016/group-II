@@ -133,23 +133,23 @@ RSpec.describe Project, type: :model do
 
     it "sends notification to users that are contributors but not manager" do
       expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: project))
+        .to match_array(Notification.where(user: another_user, notificable: project))
 
       expect(different_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: different_user, notificable: project))
+        .to match_array(Notification.where(user: different_user, notificable: project))
     end
 
     it "sends no notification to the manager" do
       expect(user.incoming_notifications.to_a)
-          .to match_array([])
+        .to be_empty
     end
 
     it "notifies users with a proper message" do
       expect(different_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
 
       expect(another_user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 
@@ -175,26 +175,25 @@ RSpec.describe Project, type: :model do
 
     before do
       UserProject.create(user: user, project: project)
-      project.destroy_and_notify author, :contributors
+      project.destroy_and_notify(author, :contributors)
     end
-
 
     it "deletes project form db" do
       expect(Project.all).to eq([])
     end
 
     it "sends no notifications to the executor of delete action" do
-      expect(author.incoming_notifications).to match_array([])
+      expect(author.incoming_notifications).to be_empty
     end
 
     it "sends proper notification to project contributors" do
       expect(user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: user, message: message) )
+        .to match_array(Notification.where(user: user, message: message) )
     end
 
     it "notifies with a proper message" do
       expect(user.incoming_notifications.first.message)
-          .to eq(message)
+        .to eq(message)
     end
   end
 end
