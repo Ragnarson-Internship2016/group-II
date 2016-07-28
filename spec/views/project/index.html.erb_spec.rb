@@ -14,37 +14,19 @@ RSpec.describe "projects/index", type: :view do
     render
   end
 
-  it "renders projects titles" do
-    expect(rendered).to include(projects[0].title)
-    expect(rendered).to include(projects[1].title)
-  end
 
   it "renders link to new project page" do
     expect(rendered).to have_link(
-      "New Project", href: "/projects/new")
+      nil, href: "/projects/new"
+    )
   end
 
   context "when signed as project manager" do
     let(:signed_user) { project.user }
 
-    it "renders link to show project" do
+    it "renders link to project details" do
       expect(rendered).to have_link(
-        "Show",
-        href: "/projects/#{project.id}"
-      )
-    end
-
-    it "renders link to edit project" do
-      expect(rendered).to have_link(
-        "Edit",
-        href: "/projects/#{project.id}/edit"
-      )
-    end
-
-    it "renders link to destroy project" do
-      expect(rendered).to have_link(
-        "Destroy",
-        href: "/projects/#{project.id}"
+        "Details", href: "/projects/#{project.id}"
       )
     end
   end
@@ -54,24 +36,25 @@ RSpec.describe "projects/index", type: :view do
       project.contributors.create(FactoryGirl.attributes_for(:user))
     end
 
-    it "renders link to show project" do
+    it "renders participated projects titles" do
+      expect(rendered).to include(project.title)
+    end
+
+    it "renders link to project details" do
       expect(rendered).to have_link(
-        "Show",
-        href: "/projects/#{project.id}"
+        "Details", href: "/projects/#{project.id}"
       )
     end
 
     it "does not render link to edit project" do
       expect(rendered).not_to have_link(
-        "Edit",
-        href: "/projects/#{project.id}/edit"
+        "Edit", href: "/projects/#{project.id}/edit"
       )
     end
 
     it "does not render link to destroy project" do
       expect(rendered).not_to have_link(
-        "Destroy",
-        href: "/projects/#{project.id}"
+        "Destroy", href: "/projects/#{project.id}"
       )
     end
   end
@@ -81,22 +64,19 @@ RSpec.describe "projects/index", type: :view do
 
     it "does not render link to show project" do
       expect(rendered).not_to have_link(
-        "Show",
-        href: "/projects/#{project.id}"
+        "Show", href: "/projects/#{project.id}"
       )
     end
 
     it "does not render link to edit project" do
       expect(rendered).not_to have_link(
-        "Edit",
-        href: "/projects/#{project.id}/edit"
+        "Edit", href: "/projects/#{project.id}/edit"
       )
     end
 
     it "does not render link to destroy project" do
       expect(rendered).not_to have_link(
-        "Destroy",
-        href: "/projects/#{project.id}"
+        "Destroy", href: "/projects/#{project.id}"
       )
     end
   end

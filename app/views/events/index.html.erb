@@ -1,32 +1,30 @@
-<p id="notice"><%= notice %></p>
+<div class="grid-item form-box 4/5 medium-4/6 tablet-4/5 mobile-1/1 horizontal-center">
 
-<h1>Events in this project</h1>
+  <h1>Events in this project
+    <a href="<%= new_project_event_path(@project) %>" class="icon-colored icon-btn">
+      <i class="fa fa-plus-circle"></i>
+    </a>
+  </h1>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="6"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @events.each do |event| %>
+  <table class="table-hover table-headed">
+    <thead>
       <tr>
-        <td><%= event.title %></td>
-        <td><%= event.description %></td>
-        <td><%= event.date %></td>
-        <td><%= link_to 'Show', [event.project, event] %></td>
-        <% if policy(event).modify? %>
-          <td><%= link_to 'Edit', [:edit, event.project, event] %></td>
-          <td><%= link_to 'Destroy',
-            [event.project, event],
-            method: :delete,
-            data: { confirm: 'Are you sure?' } %></td>
-        <% end %>
+        <th>Title</th>
+        <th>Date</th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<%= link_to 'New Event', new_project_event_path(@project) %>
-<%= link_to 'Back to project', @project %>
+    <tbody>
+      <% @events.each do |event| %>
+        <tr>
+          <td><%= event.title %></td>
+          <td><%= event.date.strftime("%d-%m-%Y %H:%M") %></td>
+          <td><%= link_to "Details", [event.project, event], class: "btn" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= link_to "Back", @project, class: "btn" %>
+</div>
