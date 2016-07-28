@@ -7,13 +7,6 @@ RSpec.describe TasksController, type: :controller do
   let(:user) { project.user }
 
   describe "when user is not authenticated" do
-    context "#index" do
-      it "redirects to sign in page" do
-        get :index, params: { project_id: project.id }
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
     context "#show" do
       it "redirects to sign in page" do
         get :show, params: { project_id: task.project.id, id: task.id }
@@ -66,46 +59,6 @@ RSpec.describe TasksController, type: :controller do
 
   context "when user is authenticated" do
     before { sign_in(user) }
-
-    describe "#index" do
-      context "with proper params" do
-        before do
-          sign_in(signed_user)
-          get :index, params: { project_id: project.id }
-        end
-
-        context "when signed in as project contributor" do
-          let(:signed_user) { user }
-
-          it "fetches tasks that belongs to requested project" do
-            expect(assigns(:tasks)).to eq([task])
-          end
-
-          it "has a 200 status code" do
-            expect(response.status).to eq(200)
-          end
-
-          it "redirects to index page" do
-            expect(response).to render_template(:index)
-          end
-        end
-
-        context "when signed in as non-participant" do
-          let(:signed_user) { FactoryGirl.create(:user) }
-
-          it "returns forbidden status" do
-            expect(response).to have_http_status(:forbidden)
-          end
-        end
-      end
-
-      context "with not existing project id" do
-        it "redirects to root" do
-          expect(get :index, params: { project_id: "foo" }).
-            to redirect_to(root_url)
-        end
-      end
-    end
 
     describe "#show" do
       context "with proper params" do

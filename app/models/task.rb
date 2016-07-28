@@ -13,6 +13,7 @@ class Task < ApplicationRecord
 
   scope :projects_with_not_done_tasks, -> { not_done.group_by(&:project) }
   scope :not_done, -> { where(done: false) }
+  scope :done, -> { where(done: true) }
 
   def projects_contributors
     project.contributors

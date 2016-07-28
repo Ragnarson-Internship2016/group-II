@@ -2,7 +2,7 @@
   <main class="grid-item 2/3 mobile-1/1">
     <h2>Your tasks</h2>
 
-    <ul>
+    <ul class="tasks-list">
     <% @user_tasks.each do |project, tasks| %>
       <h3><%= project.title %></h3>
 
@@ -31,7 +31,7 @@
     <ul class="list-menu">
     <% @user_projects.each do |project| %>
       <li>
-        <%= link_to project.title, project_tasks_path(project) %>
+        <%= link_to project.title, project_path(project) %>
       </li>
     <% end %>
     </ul>
