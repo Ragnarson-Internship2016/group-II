@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe UserProjectsController, type: :controller do
   let!(:project) { FactoryGirl.create(:project) }
   let!(:user) { FactoryGirl.create(:user) }
+  let!(:another_user) { FactoryGirl.create(:user) }
   let!(:project_contributor) { project.contributors.create(FactoryGirl.attributes_for(:user)) }
 
   describe "#create" do
@@ -23,6 +24,11 @@ RSpec.describe UserProjectsController, type: :controller do
 
           it "returns flash success message" do |variable|
             expect(flash[:notice]).to include("User successfully assigned.")
+          end
+
+          it "informs if user is already assigned" do
+            post :create, params: { project_id: project.id, user_id: user.id }
+            expect(flash[:notice]).to include("User already assigned.")
           end
         end
 
@@ -68,6 +74,18 @@ RSpec.describe UserProjectsController, type: :controller do
           it "returns flash successfully removed message" do
             delete :destroy, params: { project_id: project.id, user_id: user.id }
             expect(flash[:notice]).to include("User assignment was removed.")
+          end
+
+          it "informs if user is not assigned to the project" do
+            delete :destroy, params: { project_id: project.id, user_id: another_user.id }
+            expect(flash[:notice]).to include("User was not assigned to this project.")
+          end
+        end
+
+        context "does not allow to remove manager" do
+          it "returns error flash message" do
+            delete :destroy, params: { project_id: project.id, user_id: project.user.id }
+            expect(flash[:notice]).to include("Assignment forbidden - manager settings cannot be changed.")
           end
         end
       end

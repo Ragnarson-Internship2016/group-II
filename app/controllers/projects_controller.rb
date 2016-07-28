@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project, only: [:show, :edit, :update, :destroy, :link_contributors]
-  before_action only: [:edit, :update, :destroy] { authorize @project, :modify? }
+  before_action only: [:edit, :update, :destroy, :link_contributors] { authorize @project, :modify? }
   before_action only: [:show] { authorize @project, :access? }
 
   def index
