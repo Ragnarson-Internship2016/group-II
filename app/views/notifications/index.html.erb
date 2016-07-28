@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>My notifications: </h2>
+  <% unless @notifications.empty? %>
+    <% @notifications.each do |noti| %>
+      <div class="grid grid-pair">
+        <div class="grid-item 1/2">
+          <div class="box bg-silver notification-border">
+            <%= noti.message %>
+          </div>
+        </div>
+        <div class="grid-item 1/2 notification-btn">
+          <%= link_to "Mark as read", mark_as_read_notification_path(noti), method: :put, class: "btn" %>
+        </div>
+      </div>
+      <br>
+    <% end %>
+  <% else %>
+      No new activity
+  <% end %>
+</div>

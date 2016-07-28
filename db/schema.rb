@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722004910) do
+ActiveRecord::Schema.define(version: 20160726124710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,18 @@ ActiveRecord::Schema.define(version: 20160722004910) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["project_id"], name: "index_events_on_project_id", using: :btree
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.boolean  "read",             default: false
+    t.text     "message"
+    t.integer  "user_id"
+    t.string   "notificable_type"
+    t.integer  "notificable_id"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.index ["notificable_type", "notificable_id"], name: "index_notifications_on_notificable_type_and_notificable_id", using: :btree
+    t.index ["user_id"], name: "index_notifications_on_user_id", using: :btree
   end
 
   create_table "projects", force: :cascade do |t|
@@ -86,6 +98,7 @@ ActiveRecord::Schema.define(version: 20160722004910) do
   end
 
   add_foreign_key "events", "projects"
+  add_foreign_key "notifications", "users"
   add_foreign_key "tasks", "projects"
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"

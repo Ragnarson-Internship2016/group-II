@@ -111,4 +111,89 @@ RSpec.describe Project, type: :model do
       expect { project.destroy }.to change { project.tasks.count }.by(-3)
     end
   end
+
+  context "#updates_and_notifies" do
+    let(:project) { FactoryGirl.create(:project) }
+    let(:user) { project.user }
+    let(:different_user) { FactoryGirl.create(:user) }
+    let(:another_user) { FactoryGirl.create(:user) }
+    let(:message) { "#{project.class} - #{project.title} has been recently updated :* description was changed to wind of change" }
+
+    before do
+      UserProject.create(user: different_user, project: project)
+      UserProject.create(user: another_user, project: project)
+      params = project.attributes
+      params["description"] = "wind of change"
+      project.update_and_notify params, user, :contributors
+    end
+
+    it "updates project record" do
+      expect(project.description).to eql("wind of change")
+    end
+
+    it "sends notification to users that are contributors but not manager" do
+      expect(another_user.incoming_notifications.to_a)
+        .to match_array(Notification.where(user: another_user, notificable: project))
+
+      expect(different_user.incoming_notifications.to_a)
+        .to match_array(Notification.where(user: different_user, notificable: project))
+    end
+
+    it "sends no notification to the manager" do
+      expect(user.incoming_notifications.to_a)
+        .to be_empty
+    end
+
+    it "notifies users with a proper message" do
+      expect(different_user.incoming_notifications.first.message)
+        .to eq(message)
+
+      expect(another_user.incoming_notifications.first.message)
+        .to eq(message)
+    end
+  end
+
+  context "#create_project" do
+    let(:user) { FactoryGirl.build(:user) }
+    let(:project) { FactoryGirl.build(:project) }
+    before { project.create_project(user) }
+
+    it "saves project to db" do
+      expect(project).to eq(Project.last)
+    end
+
+    it "assigns user to project contributors" do
+      expect(UserProject.last.user).to eq(user)
+    end
+  end
+
+  context "#destroy and notify" do
+    let(:project) { FactoryGirl.create(:project) }
+    let(:author) { project.user}
+    let(:user) { FactoryGirl.create(:user) }
+    let(:message) { "#{project.class}  - #{project.title} has been removed." }
+
+    before do
+      UserProject.create(user: user, project: project)
+      project.destroy_and_notify(author, :contributors)
+    end
+
+    it "deletes project form db" do
+      expect(Project.all).to eq([])
+    end
+
+    it "sends no notifications to the executor of delete action" do
+      expect(author.incoming_notifications).to be_empty
+    end
+
+    it "sends proper notification to project contributors" do
+      expect(user.incoming_notifications.to_a)
+        .to match_array(Notification.where(user: user, message: message) )
+    end
+
+    it "notifies with a proper message" do
+      expect(user.incoming_notifications.first.message)
+        .to eq(message)
+    end
+  end
 end

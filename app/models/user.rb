@@ -15,6 +15,8 @@ class User < ApplicationRecord
 
   has_many :events, foreign_key: "author_id", dependent: :destroy
 
+  has_many :incoming_notifications, class_name: "Notification"
+
   def takes_part_in_project?(project_id)
     projects.any? { |project| project.id == project_id }
   end

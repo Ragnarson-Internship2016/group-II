@@ -4,6 +4,12 @@ Rails.application.routes.draw do
   get "/managed_projects" => "projects#managed_projects"
   get "/contributed_projects" => "projects#contributed_projects"
 
+  resources :notifications, only: [:index] do
+    member do
+      put "mark_as_read"
+    end
+  end
+
   authenticated :user do
     root "users#dashboard"
   end

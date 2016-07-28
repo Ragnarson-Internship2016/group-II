@@ -17,7 +17,7 @@ class TasksController < ApplicationController
 
   def create
     @task = @project.tasks.new(task_params)
-    if @task.save
+    if @task.save_and_notify(current_user, :projects_contributors)
       redirect_to [@project, @task], notice: "Task was successfully created."
     else
       render :new
@@ -28,7 +28,7 @@ class TasksController < ApplicationController
   end
 
   def update
-    if @task.update(task_params)
+    if @task.update_and_notify(task_params, current_user, :participants)
       redirect_to [@project, @task], notice: "Task was successfully updated."
     else
       render :edit
@@ -37,7 +37,7 @@ class TasksController < ApplicationController
 
   def mark_as_done
     respond_to do |format|
-      if @task.update(done: true)
+      if @task.update_and_notify({ done: true }, current_user, :participants)
         format.html { redirect_to project_tasks_path, notice: "Task marked as DONE." }
         format.json { head :ok }
       else
@@ -48,7 +48,7 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task.destroy
+    @task.destroy_and_notify(current_user, :participants)
     redirect_to project_tasks_path, notice: "Task was successfully destroyed."
   end
 

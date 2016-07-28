@@ -1,4 +1,6 @@
 class Project < ApplicationRecord
+  include NotificationMethods
+
   validates :title, :date, :description, presence: true
 
   belongs_to :user
@@ -9,11 +11,13 @@ class Project < ApplicationRecord
 
   has_many :tasks, dependent: :destroy
 
-  def self.create_project(current_user, project)
+  has_many :notifications, as: :notificable
+
+  def create_project(current_user)
     transaction do
       begin
-        project.save!
-        UserProject.create(user: current_user, project: project)
+        UserProject.create!(user: current_user, project: self)
+        self.save!
       rescue
         false
       end
