@@ -14,10 +14,15 @@ Rails.application.routes.draw do
     root "users#dashboard"
   end
 
+  get "/users/search" => "users#search"
+
   resources :projects do
     post "/create" => "user_projects#create"
     delete "/destroy" => "user_projects#destroy"
     get "/participants" => "user_projects#participants"
+    member do
+      get "link_contributors"
+    end
     collection do
       get "managed"
       get "contributed"

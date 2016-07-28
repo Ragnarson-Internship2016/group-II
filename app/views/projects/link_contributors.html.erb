@@ -1,0 +1,11 @@
+<div class="search-user">
+  <%= form_tag( users_search_path, method: :get, remote: true ) do %>
+    <%= label_tag "name", "Search for:" %>
+    <%= text_field_tag "name", "User name" %>
+    <%= hidden_field_tag "id", @project.id %>
+    <%= submit_tag("Search") %>
+  <% end %>
+
+  <div id="search-result">
+  </div>
+</div>

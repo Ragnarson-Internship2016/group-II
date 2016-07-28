@@ -1,0 +1,7 @@
+<div class="grid-pair">
+  <div class="grid-item 1/4"><%= user.name %></div>
+  <div class="grid-item 1/2"><%= user.surname %></div>
+  <div class="grid-item 1/4">
+     <%= link_to project_create_path(project, user), method: :post %>
+  </div>
+</div>
