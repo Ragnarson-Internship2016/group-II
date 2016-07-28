@@ -19,6 +19,6 @@ class ApplicationController < ActionController::Base
   private
 
   def fetch_unread_notification_count
-    @notification_no = current_user.incoming_notifications.not_read.size
+    @notification_no = current_user.incoming_notifications.not_read.size if current_user
   end
 end

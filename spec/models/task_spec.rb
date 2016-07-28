@@ -88,8 +88,8 @@ RSpec.describe Task, type: :model do
     end
 
     it "notifies users with a proper message" do
-      expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: task, message: message))
+      expect(another_user.incoming_notifications.first.message)
+          .to eq(message)
     end
   end
 
@@ -117,8 +117,35 @@ RSpec.describe Task, type: :model do
     end
 
     it "notifies users with a proper message" do
-      expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: task, message: message))
+      expect(another_user.incoming_notifications.first.message)
+          .to eq(message)
+    end
+  end
+
+  context "#destroy and notify" do
+    let(:task) { FactoryGirl.create(:task) }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:message) { "#{task.class}  - #{task.title} has been removed." }
+    let(:another_user) { FactoryGirl.create(:user) }
+
+    before do
+      UserProject.create(user: another_user, project: task.project)
+      UserProject.create(user: user, project: task.project)
+      UserTask.create(user: another_user, task: task)
+      task.destroy_and_notify user, :participants
+    end
+
+    it "deletes task form db" do
+      expect(Task.all).to eq([])
+    end
+
+    it "sends no notifications to the executor of delete action" do
+      expect(user.incoming_notifications).to match_array([])
+    end
+
+    it "sends proper notification to project contributors" do
+      expect(another_user.incoming_notifications.first.message)
+          .to eq(message)
     end
   end
 end

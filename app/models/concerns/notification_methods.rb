@@ -41,7 +41,7 @@ module NotificationMethods
 
   def deliver_notification(target, message, current_user)
     self.public_send(target).each do |user|
-      # next if user == current_user
+      next if user == current_user
       Notification.create!(user: user, notificable: self, message: message)
     end
   end

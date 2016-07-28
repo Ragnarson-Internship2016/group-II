@@ -32,7 +32,7 @@ RSpec.describe User, type: :model do
     it "returns an array of projects created by the user" do
       projects = []
       2.times { projects << user.managed_projects.create(title: "shop application", description: "exercise", date: "1/12/2016") }
-      expect(user.managed_projects.to_a).to eql(projects)
+      expect(user.managed_projects.to_a).to match_array(projects)
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe User, type: :model do
         projects << user.managed_projects.create(title: "shop application", description: "exercise", date: "1/12/2016")
         UserProject.create(user: user, project: projects.last)
       end
-      expect(user.contributed_projects.to_a).to eql(projects)
+      expect(user.contributed_projects.to_a).to match_array(projects)
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe User, type: :model do
     end
 
     it "contains associated events" do
-      expect(subject.events.to_a).to eql(events)
+      expect(subject.events.to_a).to match_array(events)
     end
 
     it "deletes events on user destroy" do

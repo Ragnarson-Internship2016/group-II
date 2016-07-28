@@ -145,18 +145,18 @@ RSpec.describe Project, type: :model do
     end
 
     it "notifies users with a proper message" do
-      expect(different_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: different_user, notificable: project, message: message))
+      expect(different_user.incoming_notifications.first.message)
+          .to eq(message)
 
-      expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: project, message: message))
+      expect(another_user.incoming_notifications.first.message)
+          .to eq(message)
     end
   end
 
   context "#create_project" do
     let(:user) { FactoryGirl.build(:user) }
     let(:project) { FactoryGirl.build(:project) }
-    before{project.create_project(user) }
+    before { project.create_project(user) }
 
     it "saves project to db" do
       expect(project).to eq(Project.last)
@@ -164,6 +164,37 @@ RSpec.describe Project, type: :model do
 
     it "assigns user to project contributors" do
       expect(UserProject.last.user).to eq(user)
+    end
+  end
+
+  context "#destroy and notify" do
+    let(:project) { FactoryGirl.create(:project) }
+    let(:author) { project.user}
+    let(:user) { FactoryGirl.create(:user) }
+    let(:message) { "#{project.class}  - #{project.title} has been removed." }
+
+    before do
+      UserProject.create(user: user, project: project)
+      project.destroy_and_notify author, :contributors
+    end
+
+
+    it "deletes project form db" do
+      expect(Project.all).to eq([])
+    end
+
+    it "sends no notifications to the executor of delete action" do
+      expect(author.incoming_notifications).to match_array([])
+    end
+
+    it "sends proper notification to project contributors" do
+      expect(user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: user, message: message) )
+    end
+
+    it "notifies with a proper message" do
+      expect(user.incoming_notifications.first.message)
+          .to eq(message)
     end
   end
 end

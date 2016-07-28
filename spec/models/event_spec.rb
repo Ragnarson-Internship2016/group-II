@@ -36,7 +36,7 @@ RSpec.describe Event, type: :model do
     it "adds error message about author" do
       subject.validate
       expect(subject.errors.messages[:author].first).
-        to eql("must take part in project")
+          to eql("must take part in project")
     end
   end
 
@@ -89,23 +89,21 @@ RSpec.describe Event, type: :model do
     end
 
     it "updates event record" do
-      puts event.inspect
       expect(event.description).to eql("wind of change")
     end
 
     it "sends notification to users that contribute to project it terms of which events exist" do
-      puts user.incoming_notifications.inspect
-      puts another_user.incoming_notifications.first.message.to_s
-      puts different_user.incoming_notifications.first.message.to_s
-      puts message.to_s
-      expect(user.incoming_notifications)
-          .to match_array([])
 
       expect(another_user.incoming_notifications)
           .to match_array(Notification.where(user: another_user, notificable: event))
 
       expect(different_user.incoming_notifications)
           .to match_array(Notification.where(user: different_user, notificable: event))
+    end
+
+    it "sends no notifications to the executor of action" do
+      expect(user.incoming_notifications)
+          .to match_array([])
     end
 
     it "notifies users with a proper message" do
@@ -140,8 +138,38 @@ RSpec.describe Event, type: :model do
     end
 
     it "notifies users with a proper message" do
-      expect(another_user.incoming_notifications.to_a)
-          .to match_array(Notification.where(user: another_user, notificable: event, message: message))
+      expect(another_user.incoming_notifications.first.message)
+          .to eq(message)
+    end
+  end
+
+  context "#destroy and notify" do
+    let(:event) { FactoryGirl.create(:event) }
+    let(:author) { event.project.user }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:message) { "#{event.class}  - #{event.title} has been removed." }
+
+    before do
+      UserProject.create(user: user, project: event.project)
+      event.destroy_and_notify author, :projects_contributors
+    end
+
+    it "deletes event form db" do
+      expect(Event.all).to eq([])
+    end
+
+    it "sends no notifications to the executor of delete action" do
+      expect(author.incoming_notifications).to match_array([])
+    end
+
+    it "sends proper notification to project contributors" do
+      expect(user.incoming_notifications.to_a)
+          .to match_array(Notification.where(user: user, message: message))
+    end
+
+    it "notifies user with a proper message" do
+      expect(user.incoming_notifications.first.message)
+          .to eq(message)
     end
   end
 end
