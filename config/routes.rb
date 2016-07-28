@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :projects do
     post "/create" => "user_projects#create"
     delete "/destroy" => "user_projects#destroy"
+    get "/participants" => "user_projects#participants"
     collection do
       get "managed"
       get "contributed"

@@ -1,0 +1,19 @@
+<h1><%= @project.title %></h1>
+
+<h3>Manager</h3>
+<%= "#{@manager.name} #{@manager.surname}" %>
+
+<h3>Contributors</h3>
+<% if @contributors.empty? %>
+  <p>None</p>
+<% else %>
+  <ul>
+    <% @contributors.each do |contributor| %>
+      <li>
+        <p><%= "#{contributor.name} #{contributor.surname}" %></p>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= link_to "Back", @project %>

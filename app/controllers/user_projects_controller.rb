@@ -1,7 +1,7 @@
 class UserProjectsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_project
-  before_action :set_user
+  before_action :set_user, except: :participants
 
   def create
     if current_user.managed_projects.include?(@project)
@@ -20,6 +20,11 @@ class UserProjectsController < ApplicationController
     else
       redirect_to root_url, notice: "You cannot remove anyone from project if you did not create it."
     end
+  end
+
+  def participants
+    @manager = @project.user
+    @contributors = @project.contributors - [@manager]
   end
 
   private

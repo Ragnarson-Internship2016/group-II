@@ -95,4 +95,13 @@ RSpec.describe UserProjectsController, type: :controller do
       end
     end
   end
+
+  describe "#participants" do
+    before { sign_in(project_contributor) }
+
+    it "renders participants view" do
+      get :participants, params: {project_id: project.id}
+      expect(response).to render_template(:participants)
+    end
+  end
 end
