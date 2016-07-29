@@ -1,12 +1,12 @@
 <div class="grid-item form-box 3/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
-<h2>Create new task</h2>
+  <h2>Create new task</h2>
 
-<%= render "form",
-  project: @task.project,
-  task: @task,
-  url: project_tasks_path(@task.project) %>
+  <%= render "form",
+    project: @task.project,
+    task: @task,
+    url: project_tasks_path(@task.project) %>
 
-<%= link_to "Back",
-  project_tasks_path(@task.project),
-  class: "btn" %>
+  <%= link_to "Back",
+    project_tasks_path(@task.project),
+    class: "btn" %>
 </div>

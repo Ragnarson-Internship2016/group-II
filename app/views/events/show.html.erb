@@ -1,35 +1,35 @@
 <div class="grid-item form-box 4/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">
-        <h3>Event details</h3>
-      </th>
-    </tr>
-  </thead>
+  <table>
+    <thead>
+      <tr>
+        <th colspan="2">
+          <h3>Event details</h3>
+        </th>
+      </tr>
+    </thead>
 
-  <tbody>
-  <tr>
-      <td><h4>Author</h4></td>
-      <td><%= "#{@event.author.name} #{@event.author.surname}" %></td>
-    </tr>
+    <tbody>
     <tr>
-      <td><h4>Title</h4></td>
-      <td><%= @event.title %></td>
-    </tr>
-    <tr>
-      <td><h4>Description</h4></td>
-      <td><%= @event.description %></td>
-    </tr>
-    <tr>
-      <td><h4>Date</h4></td>
-      <td><%= @event.date.strftime("%H:%M %d/%m/%Y")  %></td>
-    </tr>
-  </tbody>
-</table>
+        <td><h4>Author</h4></td>
+        <td><%= "#{@event.author.name} #{@event.author.surname}" %></td>
+      </tr>
+      <tr>
+        <td><h4>Title</h4></td>
+        <td><%= @event.title %></td>
+      </tr>
+      <tr>
+        <td><h4>Description</h4></td>
+        <td><%= @event.description %></td>
+      </tr>
+      <tr>
+        <td><h4>Date</h4></td>
+        <td><%= @event.date.strftime("%H:%M %d/%m/%Y")  %></td>
+      </tr>
+    </tbody>
+  </table>
 
-<% if policy(@event).modify? %>
-  <%= link_to 'Edit', [:edit, @event.project, @event], class: "btn" %> 
-<% end %>
-<%= link_to 'Back', project_events_path(@event.project), class: "btn" %>
+  <% if policy(@event).modify? %>
+    <%= link_to 'Edit', [:edit, @event.project, @event], class: "btn" %> 
+  <% end %>
+  <%= link_to 'Back', project_events_path(@event.project), class: "btn" %>
 </div>
