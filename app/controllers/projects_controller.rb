@@ -17,6 +17,10 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    @active_tasks = @project.tasks.not_done
+    @done_tasks = @project.tasks.done
+
+    @events = @project.events
   end
 
   def new

@@ -1,0 +1,24 @@
+.section-title {
+  @include font-size-heading(1, $font-size-h3);
+
+  display: inline-block;
+  margin-left: halve($spacing-unit);
+  margin-top: 0;
+}
+
+.section-btn {
+  padding-left: halve($spacing-unit);
+  padding-right: halve($spacing-unit);
+  float: right;
+
+  line-height: 42px;
+
+  color: $color-font;
+}
+
+.section-description {
+  display: inline-block;
+  margin-left: halve($spacing-unit);
+
+  color: $color-light-gray;
+}

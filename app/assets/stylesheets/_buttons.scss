@@ -20,4 +20,9 @@ input[type="button"], input[type="submit"], button, .btn {
     font-weight: bold;
     letter-spacing: 0.44px;
   }
+
+  &.btn-text {
+    color: $color-font;
+    background: transparent;
+  }
 }

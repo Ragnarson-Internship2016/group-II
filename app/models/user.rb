@@ -24,4 +24,8 @@ class User < ApplicationRecord
   def projects
     managed_projects + contributed_projects
   end
+
+  def full_name
+    "#{name} #{surname}"
+  end
 end

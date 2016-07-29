@@ -3,48 +3,103 @@ require 'rails_helper'
 RSpec.describe "projects/show", type: :view do
   let(:current_user) { FactoryGirl.create(:user) }
 
+  let(:project) { FactoryGirl.create(:project_with_tasks) }
+  let(:active_tasks) { project.tasks.not_done }
+  let(:done_tasks) { 2.times.collect { FactoryGirl.create(:task, done: true, project: project)} }
+  let(:events) { 2.times.collect { FactoryGirl.create(:event, project: project) }}
+
   before do
-    @project = assign(:project, FactoryGirl.create(:project))
-    @event = assign(:event, FactoryGirl.create(:event))
-    @task = assign(:task, FactoryGirl.create(:task))
+    assign(:project, project)
+    assign(:active_tasks, active_tasks)
+    assign(:done_tasks, done_tasks)
+    assign(:events, events)
+
     allow(view).to receive(:current_user) { current_user }
+
     view.define_singleton_method(:policy) do |project|
       ProjectPolicy.new(current_user, project)
     end
+
     render
   end
 
   it "renders project title" do
-    expect(rendered).to include(@project.title)
+    expect(rendered).to include(project.title)
   end
 
   it "renders project description" do
-    expect(rendered).to include(@project.description)
+    expect(rendered).to include(project.description)
   end
 
-  it "renders formatted project due date" do
-    expect(rendered).to include(@project.date.strftime("%d/%m/%Y"))
+  describe "renders active tasks'" do
+    it "titles" do
+      titles = active_tasks.map(&:title)
+
+      expect(rendered).to include(*titles)
+    end
+
+    it "descriptions" do
+      descriptions = active_tasks.map(&:description)
+
+      expect(rendered).to include(*descriptions)
+    end
+
+    it "proper formatted due dates" do
+      formatted_due_dates = active_tasks.map do |task|
+        task.due_date.to_formatted_s(:short)
+      end
+
+      expect(rendered).to include(*formatted_due_dates)
+    end
   end
 
-  it "render link to project page" do
-    expect(rendered).to have_link("Back", href: "/projects")
+  describe "renders done tasks'" do
+    it "titles" do
+      titles = done_tasks.map(&:title)
+
+      expect(rendered).to include(*titles)
+    end
+
+    it "descriptions" do
+      descriptions = done_tasks.map(&:description)
+
+      expect(rendered).to include(*descriptions)
+    end
+
+    it "proper formatted due dates" do
+      formatted_due_dates = done_tasks.map do |task|
+        task.due_date.to_formatted_s(:short)
+      end
+
+      expect(rendered).to include(*formatted_due_dates)
+    end
   end
 
-  it "render link to project events page" do
-    expect(rendered). to have_link("All events", href: "/projects/#{@project.id}/events")
+  it "renders events' titles" do
+    titles = events.map(&:title)
+
+    expect(rendered).to include(*titles)
   end
 
-  it "render link to project tasks page" do
-    expect(rendered). to have_link("All tasks", href: "/projects/#{@project.id}/tasks")
+  it "renders proper formatted events' due dates" do
+    formatted_due_dates = events.map do |event|
+      event.date.to_formatted_s(:short)
+    end
+
+    expect(rendered).to include(*formatted_due_dates)
+  end
+
+  it "renders link to new event page" do
+    expect(rendered).to have_link(nil, href: "/projects/#{project.id}/events/new")
   end
 
   context "when signed in as project manager" do
-    let(:current_user) { @project.user }
+    let(:current_user) { project.user }
 
-    it "renders link to edit project" do
+    it "renders link to edit project page" do
       expect(rendered).to have_link(
         "Edit",
-        href: "/projects/#{@project.id}/edit"
+        href: "/projects/#{project.id}/edit"
       )
     end
   end
@@ -53,7 +108,7 @@ RSpec.describe "projects/show", type: :view do
     it "does not render link to edit project" do
       expect(rendered).to_not have_link(
         "Edit",
-        href: "/projects/#{@project.id}/edit"
+        href: "/projects/#{project.id}/edit"
       )
     end
   end

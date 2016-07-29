@@ -4,10 +4,6 @@ class TasksController < ApplicationController
   before_action :set_task, except: [:new, :create, :index]
   before_action { authorize @project, :access? }
 
-  def index
-    @tasks = @project.tasks.all
-  end
-
   def show
   end
 
