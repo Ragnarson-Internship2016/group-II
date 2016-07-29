@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   include NotificationMethods
 
   validates :title, :date, :description, presence: true
+  validates :date, future_date: true
 
   belongs_to :user
   has_many :user_projects, dependent: :destroy

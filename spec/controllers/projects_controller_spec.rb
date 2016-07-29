@@ -55,6 +55,13 @@ RSpec.describe ProjectsController, type: :controller do
         delete :destroy, params: { id: project.id }
         expect(response).to redirect_to(new_user_session_path)
       end
+
+    context "#link_contributors" do
+      it "redirects to sign in page" do
+        get :link_contributors, params: { id: project.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
     end
   end
 
@@ -315,6 +322,50 @@ RSpec.describe ProjectsController, type: :controller do
 
         it "returns forbidden status" do
           expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+
+    describe "GET #link_contributors" do
+      context "when logged as manager" do
+        before { get :link_contributors, params: { id: project.id } }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "renders template index" do
+          expect(response).to render_template(:link_contributors)
+        end
+      end
+
+      context "when logged as contributor" do
+        before {
+          sign_in(contributor)
+          get :link_contributors, params: { id: project.id }
+        }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:forbidden)
+        end
+
+        it "renders template index" do
+          expect(response).not_to render_template(:link_contributors)
+        end
+      end
+
+      context "when logged as non-participant" do
+        before {
+          sign_in(non_participant)
+          get :link_contributors, params: { id: project.id }
+        }
+
+        it "returns http success" do
+          expect(response).to have_http_status(:forbidden)
+        end
+
+        it "renders template index" do
+          expect(response).not_to render_template(:link_contributors)
         end
       end
     end

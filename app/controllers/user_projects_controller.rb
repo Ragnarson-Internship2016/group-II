@@ -5,8 +5,12 @@ class UserProjectsController < ApplicationController
 
   def create
     if current_user.managed_projects.include?(@project)
-      user_project = UserProject.create!(user: @user, project: @project)
-      redirect_to @project, notice: "User successfully assigned."
+      begin
+        user_project = UserProject.create!(user: @user, project: @project)
+        redirect_to @project, notice: "User successfully assigned."
+      rescue
+        redirect_to link_contributors_project_path(@project), notice: "User already assigned."
+      end
     else
       redirect_to root_url, notice: "You cannot add anyone to project if you did not create it."
     end
@@ -14,9 +18,12 @@ class UserProjectsController < ApplicationController
 
   def destroy
     if current_user.managed_projects.include?(@project)
-      user_project = UserProject.find_by(user: @user, project: @project)
-      user_project.destroy
-      redirect_to @project, notice: "User assignment was removed."
+      if user_project = UserProject.find_by(user: @user, project: @project)
+        user_project.destroy
+        redirect_to @project, notice: "User assignment was removed."
+      else
+        redirect_to @project, notice: "User was not assigned to this project."
+      end
     else
       redirect_to root_url, notice: "You cannot remove anyone from project if you did not create it."
     end
@@ -33,6 +40,9 @@ class UserProjectsController < ApplicationController
   end
 
   def set_user
-    @user = User.find(params[:user_id])
+    @user = User.find(params["user_id"])
+    if @user == @project.user
+      redirect_to link_contributors_project_path(@project), notice: "Assignment forbidden - manager settings cannot be changed."
+    end
   end
 end
