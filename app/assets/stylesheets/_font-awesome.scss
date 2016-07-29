@@ -1,2 +1,8 @@
 $fa-font-path: "/assets/font-awesome/fonts";
+.icon-colored {
+  color: $brand-color;
+}
+.icon-btn:hover {
+  color: lighten($brand-color, 5%);
+}
 @import "font-awesome/font-awesome.scss";
