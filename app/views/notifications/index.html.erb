@@ -2,7 +2,7 @@
   <h2>My notifications: </h2>
   <% unless @notifications.empty? %>
     <% @notifications.each do |noti| %>
-      <div class="grid grid-pair">
+      <div class="grid grid-pair grid-middle">
         <div class="grid-item 1/2">
           <div class="box bg-silver notification-border">
             <%= noti.message %>
