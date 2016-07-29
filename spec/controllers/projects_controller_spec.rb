@@ -75,8 +75,12 @@ RSpec.describe ProjectsController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it "assigns all projects to the instance variable" do
-        expect(assigns(:projects)).to eq(Project.all)
+      it "assigns contributed projects to the instance variable" do
+        expect(assigns(:contributed)).to eq(user.contributed_projects.all)
+      end
+
+      it "assigns managed projects to the instance variable" do
+        expect(assigns(:managed)).to eq(user.managed_projects.all)
       end
 
       it "renders template index" do

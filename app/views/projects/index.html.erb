@@ -6,16 +6,35 @@
     </a>
   </h1>
 
-  <table class="table-hover">
-    <tbody>
-      <% @projects.each do |project| %>
-        <% if policy(project).access? %>
+  <% if !@managed.empty? %>
+    <table class="table-hover table-headed">
+      <thead>
+        <td><h3>Managed</h3></td>
+      </thead>
+      <tbody>
+        <% @managed.each do |project| %>
           <tr>
             <td><%= project.title %></td>
             <td><%= link_to "Details", project, class: "btn" %></td>
           </tr>
         <% end %>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  <% end %>
+
+  <% if !@contributed.empty? %>
+    <table class="table-hover table-headed">
+      <thead>
+        <td><h3>Contributed</h3></td>
+      </thead>
+      <tbody>
+        <% @contributed.each do |project| %>
+          <tr>
+            <td><%= project.title %></td>
+            <td><%= link_to "Details", project, class: "btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
 </div>
