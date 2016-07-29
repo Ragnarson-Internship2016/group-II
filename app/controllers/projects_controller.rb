@@ -5,7 +5,8 @@ class ProjectsController < ApplicationController
   before_action only: [:show] { authorize @project, :access? }
 
   def index
-    @projects = Project.all
+    @contributed = current_user.contributed_projects
+    @managed = current_user.managed_projects
   end
 
   def managed

@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "projects/index", type: :view do
-  let(:projects) { 2.times.collect { FactoryGirl.create(:project) } }
-  let(:project) { projects.first }
+  let(:managed) { 2.times.collect { FactoryGirl.create(:project) } }
+  let(:contributed) { 2.times.collect { FactoryGirl.create(:project) } }
+  let(:project) { managed.first }
   let(:signed_user) {}
 
   before do
@@ -10,7 +11,8 @@ RSpec.describe "projects/index", type: :view do
     view.define_singleton_method(:policy) do |project|
       ProjectPolicy.new(current_user, project)
     end
-    assign(:projects, projects)
+    assign(:managed, managed)
+    assign(:contributed, contributed)
     render
   end
 
