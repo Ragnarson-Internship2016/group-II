@@ -5,7 +5,10 @@ class ProjectsController < ApplicationController
   before_action only: [:show] { authorize @project, :access? }
 
   def index
-    @contributed = current_user.contributed_projects
+   @contributed = []
+    current_user.contributed_projects.each do |project|
+      @contributed << project if project.user != current_user
+    end
     @managed = current_user.managed_projects
   end
 
@@ -14,7 +17,10 @@ class ProjectsController < ApplicationController
   end
 
   def contributed
-    @projects = current_user.contributed_projects.all
+    @projects = []
+    current_user.contributed_projects.each do |project|
+      @projects << project if project.user != current_user
+    end
   end
 
   def show
