@@ -1,19 +1,44 @@
-<h1><%= @project.title %></h1>
+<h2>Participants of: <%= @project.title %></h2>
+<hr>
 
-<h3>Manager</h3>
-<%= "#{@manager.name} #{@manager.surname}" %>
+<div class="grid grid-middle">
+  <div class="grid-item 1/5">
+    <h3>Manager</h3>
+  </div>
+  <div class="grid-item 4/5">
+    <h4>
+      <%= "#{@manager.name} #{@manager.surname}" %>
+    </h4>
+  </div>
+</div>
 
-<h3>Contributors</h3>
-<% if @contributors.empty? %>
-  <p>None</p>
-<% else %>
-  <ul>
-    <% @contributors.each do |contributor| %>
-      <li>
-        <p><%= "#{contributor.name} #{contributor.surname}" %></p>
-      </li>
+
+<div class="grid grid-middle">
+  <div class="grid-item 1/5">
+    <h3>Contributors</h3>
+  </div>
+  <div class="grid-item 4/5">
+    <% if policy(@project).modify? %>
+      <%= link_to "Add new participant", link_contributors_project_path(@project), class: "btn" %>
     <% end %>
-  </ul>
-<% end %>
+  </div>
+</div>
 
-<%= link_to "Back", @project %>
+<div class="grid grid-middle">
+  <% if @contributors.empty? %>
+    <div class="grid-item 1/20"></div>
+    <div class="grid-item 19/20">None</div>
+  <% else %>
+    <% @contributors.each do |contributor| %>
+      <% if policy(@project).modify? %>
+        <div class="grid-item 1/10 my-padding">
+          <%= link_to "-", project_destroy_path(project_id: @project.id, user_id: contributor.id), method: :delete, class: "btn" %>
+        </div>
+      <% end %>
+      <div class="grid-item 9/10 my-padding">
+        <%= "#{contributor.name} #{contributor.surname}" %>
+      </div>
+    <% end %>
+    </div>
+  <% end %>
+</div>
