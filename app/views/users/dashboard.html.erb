@@ -29,7 +29,16 @@
   <aside class="grid-item 1/3 mobile-1/1">
     <h2>Projects</h2>
     <ul class="list-menu">
-    <% @user_projects.each do |project| %>
+    <h3>Managed</h3>
+    <% @managed.each do |project| %>
+      <li>
+        <%= link_to project.title, project_tasks_path(project) %>
+      </li>
+    <% end %>
+    </ul>
+    <ul class="list-menu">
+    <h3>Contributed</h3>
+    <% @contributed.each do |project| %>
       <li>
         <%= link_to project.title, project_tasks_path(project) %>
       </li>

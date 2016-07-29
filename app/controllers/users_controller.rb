@@ -1,7 +1,11 @@
 class UsersController < ApplicationController
   def dashboard
     @user_tasks = current_user.assigned_tasks.projects_with_not_done_tasks
-    @user_projects = current_user.projects
+    @contributed = []
+    current_user.contributed_projects.each do |project|
+      @contributed << project if project.user != current_user
+    end
+    @managed = current_user.managed_projects
   end
 
   def search
