@@ -1,11 +1,10 @@
 <% users.each do |user| %>
   <div class="grid grid-middle">
-    <div class="grid-item 1/10 mobile-1/5">
+    <div class="grid-item 1/10 mobile-1/5 my-padding">
       <%= link_to "+", project_create_path(project_id: @project.id, user_id: user.id), method: :post, class: "btn" %>
     </div>
-    <div class="grid-item 9/10 mobile-4/5">
+    <div class="grid-item 9/10 mobile-4/5 my-padding">
       <%= user.name %> <%= user.surname %>
     </div>
   </div>
-  <br>
 <% end %>
