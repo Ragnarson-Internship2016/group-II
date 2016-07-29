@@ -1,10 +1,12 @@
-<h1>Edit task</h1>
+<div class="grid-item form-box 3/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
+  <h2>Edit task</h2>
 
-<%= render "form",
-  project: @task.project,
-  task: @task,
-  url: project_task_path(@task.project, @task) %>
+  <%= render "form",
+    project: @task.project,
+    task: @task,
+    url: project_task_path(@task.project, @task) %>
 
-<%= link_to "Back",
-  project_tasks_path(@task.project),
-  class: "btn" %>
+  <%= link_to "Back",
+    project_tasks_path(@task.project),
+    class: "btn" %>
+</div>

@@ -1,5 +1,6 @@
-<h1>Edit project</h1>
-<%= render "form",  project: @project %>
+<div class="grid-item form-box 3/5 medium-3/6 tablet-3/5 mobile-1/1 horizontal-center">
+  <h2>Edit project</h2>
+  <%= render "form",  project: @project %>
 
-<%= link_to "Show", @project %> |
-<%= link_to "Back", projects_path %>
+  <%= link_to "Back", projects_path, class: "btn" %>
+</div>
